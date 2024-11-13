@@ -1,5 +1,325 @@
 [
     {
+        "title": "Compressive force and valgus torque are the predominant applied loads during the pivot shift exam: An in vitro study.",
+        "abstract": "Despite the clinical utility of the pivot shift exam, the requisite applied forces and torques to elicit a pivot shift remain unclear. The purposes of this study are (1) to identify the greatest forces and torques applied to the knee during the pivot shift exam and (2) to evaluate if the applied loads differ among experienced surgeons.",
+        "mesh_terms": [],
+        "keywords": [
+            "anterior cruciate ligament",
+            "anterior cruciate ligament rupture",
+            "clinical exam",
+            "force",
+            "knee",
+            "pivot shift",
+            "torque"
+        ]
+    },
+    {
+        "title": "Impact of adherence to oral nutritional supplements on nutrition status and muscle strength in patients with gastrointestinal cancer: A prospective observational longitudinal study.",
+        "abstract": "Given the lack of evidence regarding the effects of adherence to oral nutritional supplements (ONS) and the types of formulas used in clinical practice, we aimed to assess the impact of adherence to ONS and the high-protein formula on the nutrition status and muscle strength in patients with gastrointestinal cancer.",
+        "mesh_terms": [],
+        "keywords": [
+            "gastrointestinal cancer",
+            "muscle strength",
+            "nutrition status",
+            "nutrition support",
+            "oral nutritional supplements"
+        ]
+    },
+    {
+        "title": "Clinical Value of IgG Antibody Test in Screening for Clonorchis sinensis Infection in High-Risk Population.",
+        "abstract": "In areas where C. sinensis is endemic, early screening and diagnosis of C. sinensis infection is crucial to prevent complications and interrupt the chain of transmission. Testing for C. sinensis IgG antibodies is frequently employed as a screening method for detecting the disease. However, its effectiveness in populations with a high risk remains to be determined. This study aimed to evaluate the clinical value of IgG antibody testing for screening C. sinensis infection in high-risk populations.",
+        "mesh_terms": [
+            "Humans",
+            "Immunoglobulin G",
+            "Male",
+            "Female",
+            "Middle Aged",
+            "Adult",
+            "Clonorchiasis",
+            "Antibodies, Helminth",
+            "Animals",
+            "Enzyme-Linked Immunosorbent Assay",
+            "Aged",
+            "Young Adult",
+            "Clonorchis Sinensis",
+            "Adolescent",
+            "Child",
+            "Feces",
+            "Sensitivity And Specificity",
+            "Mass Screening",
+            "Child, Preschool",
+            "Risk Factors",
+            "Parasite Egg Count",
+            "China"
+        ],
+        "keywords": []
+    },
+    {
+        "title": "Evaluating the Impact of Rapid Multiplex PCR Testing on Meningitis and Encephalitis Diagnosis: a Retrospective Analysis.",
+        "abstract": "Meningitis and encephalitis are life-threatening neurological emergencies requiring prompt diagnosis and treatment. Traditional diagnostic methods often lack the speed and sensitivity needed for rapid clinical decision-making. This study evaluates the effectiveness of rapid multiplex PCR testing in diagnosing meningitis and encephalitis.",
+        "mesh_terms": [
+            "Humans",
+            "Multiplex Polymerase Chain Reaction",
+            "Retrospective Studies",
+            "Middle Aged",
+            "Adult",
+            "Aged",
+            "Female",
+            "Male",
+            "Encephalitis",
+            "Aged, 80 And Over",
+            "Meningitis",
+            "Young Adult",
+            "Sensitivity And Specificity",
+            "Herpesvirus 1, Human",
+            "Herpesvirus 3, Human"
+        ],
+        "keywords": []
+    },
+    {
+        "title": "Economic Evaluations of Health Care Interventions in Pediatric Hospital Care.",
+        "abstract": "The hospital medicine movement thrives in a health care environment committed to providing high-quality, safe, and value-based care. Hospitalists and hospitals continually grapple with many decisions regarding adopting new interventions and deadopting established ones. These decisions span the gamut from tests, treatments, and supportive care, to care models. Traditionally, the choice to adopt one intervention over another is commonly thought of in terms of its direct impact on patient outcomes, benefits, and harms. However, the evolving landscape of health care, characterized by increasing constraints on resources necessitates a broader perspective, one that includes a thorough consideration of the economic implications. The goal is not to minimize costs but rather to maximize value, outcomes achieved for money spent. Economic evaluations of health care interventions can provide this information by quantifying value and assisting health care providers, hospitals, and health systems in deciding which intervention to adopt. Economic evaluations deal with both inputs (ie, costs) and outputs (ie, consequences). Few economic evaluations in pediatric hospital medicine have been published, and many clinicians are unfamiliar with them. This paper discusses the economic evaluation of health care interventions with special attention to the pediatric hospitalist and hospital care. The paper aims to give readers an understanding of the key concepts underlying economic evaluations.",
+        "mesh_terms": [],
+        "keywords": []
+    },
+    {
+        "title": "Revisiting the Efficacy and Safety of Bivalirudin in Patients With ST-Segment Elevation Myocardial Infarction Undergoing Percutaneous Coronary Intervention: Insights From a Mixed Treatment Comparison Meta-Analysis of Randomized Trials.",
+        "abstract": "Randomized trials of bivalirudin in patients with ST elevation myocardial infarction (STEMI) have yielded heterogeneous results.",
+        "mesh_terms": [],
+        "keywords": [
+            "Gp2b3a inhibitors",
+            "STEMI",
+            "bivalirudin",
+            "efficacy",
+            "heparin",
+            "safety"
+        ]
+    },
+    {
+        "title": "Evaluation of quality of life and satisfaction in patients undergoing laparoscopic Mitrofanoff procedure.",
+        "abstract": "The Mitrofanoff principle has been extensively evaluated in terms of associated morbidity and mortality. However, there is limited literature specifically addressing quality of life (QoL), particularly concerning the laparoscopic procedure. The aim of this study was to assess the impact of laparoscopic appendicovesicostomy (LA) on QoL by using a specific questionnaire targeted at patients and their families.",
+        "mesh_terms": [
+            "Humans",
+            "Quality Of Life",
+            "Male",
+            "Female",
+            "Laparoscopy",
+            "Patient Satisfaction",
+            "Child",
+            "Adolescent",
+            "Surveys And Questionnaires",
+            "Follow-Up Studies",
+            "Length Of Stay",
+            "Urinary Catheterization",
+            "Urinary Incontinence",
+            "Treatment Outcome"
+        ],
+        "keywords": [
+            "Quality of life",
+            "Urinary bladder, neurogenic",
+            "Urinary catheterization"
+        ]
+    },
+    {
+        "title": "Mobile stroke units services in Germany: A cost-effectiveness modeling perspective on catchment zones, operating modes, and staffing.",
+        "abstract": "Investigating the cost-effectiveness of future mobile stroke unit (MSU) services with respect to local idiosyncrasies is essential for enabling large-scale implementation of MSU services. The aim of this study was to assess the cost-effectiveness for varying urban German settings and modes of operation.",
+        "mesh_terms": [],
+        "keywords": [
+            "acute stroke care",
+            "acute stroke therapy",
+            "computed tomography",
+            "economic evaluation",
+            "mobile stroke unit",
+            "telemedicine"
+        ]
+    },
+    {
+        "title": "The Effect of Implantoplasty on Fracture Resistance and Implant Surface Changes: An In\u00a0Vitro and Finite Element Analysis Study.",
+        "abstract": "Implantoplasty can be performed on implants diagnosed with peri-implantitis to facilitate implant decontamination and improve access for oral home care. However, its effect on the mechanical strength of the implant is still uncertain. This study aimed to evaluate the effect of implantoplasty on the fracture resistance of dental implants with various degrees of bone loss, as well as its surface changes.",
+        "mesh_terms": [],
+        "keywords": [
+            "dental implant",
+            "fracture resistance",
+            "implantoplasty",
+            "peri\u2010implantitis",
+            "surface roughness"
+        ]
+    },
+    {
+        "title": "Anxiety and Depression Are Associated with Poor Long-term Quality of Life in Moderate-to-Severe Ulcerative Colitis: Results of a 3-Year Longitudinal Study of the MOSAIK Cohort.",
+        "abstract": "We previously reported that patients with moderate-to-severe ulcerative colitis (UC) often experience common mental disorders (CMDs) such as anxiety and depression, necessitating immediate psychological interventions within the first 4 weeks of diagnosis. In this 3-year follow-up study of the MOSAIK cohort in Korea, we examined the effects of CMDs at initial diagnosis on clinical outcomes and health-related quality of life (HRQoL).",
+        "mesh_terms": [],
+        "keywords": [
+            "Anxiety",
+            "Depression",
+            "Disease outcomes",
+            "Quality of life",
+            "Ulcerative colitis"
+        ]
+    },
+    {
+        "title": "Effect of Lidocaine on Ciprofol Dosage and Efficacy in Patients Who Underwent Gastroscopy Sedation.",
+        "abstract": "BACKGROUND Intravenous ciprofol is a short-acting sedative with minimal respiratory and circulatory suppression and limited analgesia. Intravenous lidocaine provides analgesia during surgical procedures. This study included 70 patients who underwent gastroscopy with analgesia and aimed to evaluate the effects of intravenous lidocaine on the dose of ciprofol required to produce 50% of the maximal effect (ED50). MATERIAL AND METHODS Seventy patients scheduled for elective painless gastroscopy were randomly assigned into 2 groups: group L (n=35, received ciprofol and 1.5 mg/kg lidocaine) and group S (n=35, received ciprofol and normal saline). The primary outcomes measured were the ED50 and the 95% effective dose (ED95) of ciprofol, determined using the modified up-down sequential method and Probit analysis. Secondary outcomes included induction, operation, and recovery times; monitoring of vital signs such as mean arterial pressure, heart rate, and oxygen saturation; and evaluation of postoperative adverse reactions, including sore throat, nausea, vomiting, abdominal pain, and satisfaction scores from endoscopists and anesthesiologists. RESULTS The ED50 of ciprofol in group L was 0.315 mg/kg (95% CI, 0.291-0.342 mg/kg), which was significantly lower than that in group S, 0.42 mg/kg (95% CI, 0.371-0.491 mg/kg). Additionally, group L exhibited shorter induction and recovery times, a lower incidence of postoperative sore throat, and a temporary drop in blood pressure following induction. CONCLUSIONS Intravenous lidocaine during painless gastroscopy reduces the required ciprofol dose, shortens induction and recovery times, and lowers the incidence of postoperative complications, such as sore throat. These findings support its effective role in improving sedation quality and patient outcomes during gastroscopy.",
+        "mesh_terms": [
+            "Humans",
+            "Lidocaine",
+            "Male",
+            "Female",
+            "Gastroscopy",
+            "Middle Aged",
+            "Adult",
+            "Hypnotics And Sedatives",
+            "Aged",
+            "Dose-Response Relationship, Drug",
+            "Conscious Sedation",
+            "Anesthetics, Local",
+            "Cyclopropanes"
+        ],
+        "keywords": []
+    },
+    {
+        "title": "Assessing ChatGPT's cybersecurity implications in Saudi Arabian healthcare and education sectors: A comparative study.",
+        "abstract": "This study aims to critically evaluate ChatGPT's impact on cybersecurity in healthcare and education sectors.",
+        "mesh_terms": [],
+        "keywords": [
+            "ChatGPT",
+            "artificial intelligence",
+            "cybersecurity",
+            "data privacy",
+            "educational technology",
+            "healthcare security"
+        ]
+    },
+    {
+        "title": "Generic Volar Locking Plate Use in Distal Radius Fractures: A Prospective Randomized Study to Evaluate Clinical Outcomes and Cost Reduction.",
+        "abstract": "The purpose of this study was to evaluate differences in 90-day clinical outcomes between patients treated with generic volar locking plates (VLPs) and conventional VLPs in distal radius fractures. Secondary aims included assessing for differences in surgical characteristics and cost between the groups.",
+        "mesh_terms": [],
+        "keywords": [
+            "anatomy",
+            "basic science",
+            "bone",
+            "diagnosis",
+            "distal radius",
+            "fracture/dislocation",
+            "health policy",
+            "research and health outcomes",
+            "specialty",
+            "surgery",
+            "trauma",
+            "wrist"
+        ]
+    },
+    {
+        "title": "Decadal changes in nocturia among American middle-aged and older men.",
+        "abstract": "To estimate the prevalence of nocturia in middle-aged and elderly men and evaluate its associated factors and changes over time.",
+        "mesh_terms": [],
+        "keywords": [
+            "NHANES",
+            "lifestyle",
+            "nocturia",
+            "related factors",
+            "trend"
+        ]
+    },
+    {
+        "title": "The impact of in-house education on staff confidence in delivering palliative and end-of-life care: a service evaluation.",
+        "abstract": "Palliative and end-of-life care (EoLC) education is available to all community and hospital healthcare staff in one NHS trust in the north-east of England. It is also available to care home and domiciliary care staff within the geographical area of the trust.",
+        "mesh_terms": [
+            "Humans",
+            "Terminal Care",
+            "Palliative Care",
+            "England",
+            "State Medicine",
+            "Attitude Of Health Personnel",
+            "Inservice Training",
+            "Surveys And Questionnaires"
+        ],
+        "keywords": [
+            "Education",
+            "End-of-life care",
+            "Palliative care",
+            "Patient care",
+            "Staff confidence"
+        ]
+    },
+    {
+        "title": "Metal-Free Custom-Made Zirconia Implants-A Prospective 5-Year Follow-Up Single-Arm Clinical Trial.",
+        "abstract": "Dental implants made of zirconia (ZrO2) are a potential alternative for titanium implants in dentistry because of their good biocompatibility, mechanical properties and excellent aesthetic results. However, solid long-term scientific data to prove clinical success of ZrO2 implants are scarce.",
+        "mesh_terms": [],
+        "keywords": [
+            "dental implants",
+            "metal\u2010free dentistry",
+            "zirconia"
+        ]
+    },
+    {
+        "title": "Mapping of the health of the Nation Outcomes Scale (HoNOS) and Positive and Negative Symptom Scale (PANSS) to the EQ-5D-3L in psychosis patients using the PHAMOUS study.",
+        "abstract": "When health outcomes relevant for economic evaluations are unavailable, algorithms can be developed to map utilities using available clinical outcome measures. This study aims to develop two mapping algorithms estimating EuroQol-5 dimension-3 level (EQ-5D-3\u2009L) utilities using the clinician-rated Health of the Nation Outcome Scores (HoNOS) and Positive and Negative Syndrome Scale (PANNS).",
+        "mesh_terms": [],
+        "keywords": [
+            "EQ-5D",
+            "HoNOS",
+            "PANSS",
+            "mapping",
+            "prediction",
+            "psychotic disorders",
+            "severe mental illness"
+        ]
+    },
+    {
+        "title": "Low Aortic Pulsatility Index and Pulmonary Artery Pulsatility Index Are Associated With Increased Mortality in Patients With Dilated Cardiomyopathy Awaiting Heart Transplantation.",
+        "abstract": "Patients with dilated cardiomyopathy (DCM) tend to be accompanied by biventricular impairment. We hypothesized that the combination of the aortic pulsatility index (API) and pulmonary artery pulsatility index (PAPI) could refine risk stratification in DCM.",
+        "mesh_terms": [],
+        "keywords": [
+            "Dilated cardiomyopathy",
+            "Heart transplantation",
+            "Hemodynamics",
+            "Prognosis",
+            "Ventricular function"
+        ]
+    },
+    {
+        "title": "Clinical Efficacy of CBCT and 3D-Printed Replicas in Molar Autotransplantation: A Controlled Clinical Trial.",
+        "abstract": "To evaluate the efficacy of the combined cone-beam (CBCT)/3D-replicas protocol on the clinical and radiographic outcomes of autotransplanted molars.",
+        "mesh_terms": [],
+        "keywords": [
+            "cone beam computed tomography",
+            "immature",
+            "printed tooth replica",
+            "third molar",
+            "tooth transplantation"
+        ]
+    },
+    {
+        "title": "Epoxymicheliolide Reduces Radiation-Induced Senescence and Extracellular Matrix Formation by Disrupting NF-\u03baB and TGF-\u03b2/SMAD Pathways in Lung Cancer.",
+        "abstract": "Lung cancer is a major cause of cancer-related mortality, and radiotherapy is often limited by tumor resistance and side effects. This study explores whether epoxymicheliolide (ECL), a compound from feverfew, can enhance radiotherapy efficacy in lung cancer. We tested ECL on A549 and PC-9 lung cancer cell lines to evaluate its effect on x-ray irradiation. We measured apoptosis, NF-\u03baB pathway inhibition, TGF-\u03b2 secretion reduction, and epithelial-mesenchymal transition suppression. In\u00a0vivo, C57BL/6 mice with lung tumors received ECL and radiotherapy. ECL enhanced the antiproliferative effects of x-ray irradiation, induced apoptosis in senescent cells, inhibited the NF-\u03baB pathway, reduced TGF-\u03b2 levels, and suppressed epithelial-mesenchymal transition. ECL also inhibited tumor growth and improved survival in mice. ECL is a promising adjunct to radiotherapy for lung cancer, improving treatment outcomes by targeting multiple tumor progression mechanisms. It offers potential for enhanced management of lung cancer.",
+        "mesh_terms": [],
+        "keywords": [
+            "NF\u2010\u03baB",
+            "TGF\u2010\u03b2/SMAD",
+            "epoxymicheliolide",
+            "extracellular matrix formation",
+            "radiation\u2010induced senescence"
+        ]
+    },
+    {
+        "title": "The Effect of Rosuvastatin on Facial Nerve Regeneration After Facial Nerve Injury: An Experimental Animal Study.",
+        "abstract": "Rosuvastatin is an antihyperlipidemic statin group pharmacological agent with antioxidant, neuroprotective, and anti-inflammatory effects. In this study, we aimed to examine the functional, electrophysiological, and histopathological effects of rosuvastatin or in combination with corticosteroids on facial nerve regeneration in rats with traumatic peripheral facial paralysis (PFP).",
+        "mesh_terms": [],
+        "keywords": [
+            "facial nerve",
+            "neuroprotective",
+            "regeneration",
+            "rosuvastatin"
+        ]
+    },
+    {
+        "title": "Associations between Leisure and Work Time Activity Behavior and 24 H Ambulatory Blood Pressure among Aging Workers.",
+        "abstract": "Purpose: The associations between work time, leisure-time, and non-workday physical activity (PA) and sedentary behavior (SED) and 24 h ambulatory blood pressure (BP) are not well known. Therefore, the aim of this study was to evaluate the associations between domain-specific activity behavior and 24 h blood pressure.Methods: A hundred and fifty-six aging workers (mean age 62.4 [SD 1.0] years, BMI 26.2 [4.5] kg/m2, 84 % women, 75 % non-manual occupation) from the Finnish Retirement and Aging study (FIREA) were included. Standing, light and moderate-to-vigorous PA (LPA and MVPA, respectively), and SED were measured using thigh-worn accelerometers and work time, leisure-time, and non-workdays were distinguished using a diary. Ambulatory 24 h BP was analyzed as mean daytime and nighttime systolic and diastolic BP, and the nocturnal BP dipping percentage was calculated. Associations were examined with linear regression analysis adjusting for age, sex, occupation, work time mode, job strain, BMI, BP medication, and accelerometer wear time.Results: Higher work time SED associated with lower nighttime diastolic BP (B = -0.92, 95% CI -1.83, -0.01). In addition, higher work time standing associated with higher daytime diastolic BP (B = 1.34, 95% CI 0.03, 2.65) and higher work time LPA with less diastolic BP dipping (B = -3.57, 95% CI -6.80, -0.34). MVPA in any domain was not associated with ambulatory BP.Conclusions: Higher work time SED associated with a more favorable diastolic BP, and higher work time PA associated with more adverse diastolic BP among aging workers. In conclusion, work time, rather than leisure time or non-workday, activity behavior seems to associate with 24 h ambulatory BP.",
+        "mesh_terms": [],
+        "keywords": []
+    },
+    {
         "title": "A novel step-by-step teaching method improves training outcomes in transvaginal ultrasound for postgraduate reproductive medicine students: an exploratory randomized controlled study.",
         "abstract": "Traditional methods of training in ultrasound technology make it difficult for postgraduate reproductive medicine students to rapidly develop into doctors who can perform clinical examinations independently. It is necessary to explore an efficient method for ultrasound training. The purpose of this study was to investigate whether the step-by-step (SBS) teaching improves the ultrasound diagnosis and clinical work level of reproductive medicine graduate students.",
         "mesh_terms": [],
@@ -4120,32 +4440,6 @@
         ]
     },
     {
-        "title": "Compressive force and valgus torque are the predominant applied loads during the pivot shift exam: An in vitro study.",
-        "abstract": "Despite the clinical utility of the pivot shift exam, the requisite applied forces and torques to elicit a pivot shift remain unclear. The purposes of this study are (1) to identify the greatest forces and torques applied to the knee during the pivot shift exam and (2) to evaluate if the applied loads differ among experienced surgeons.",
-        "mesh_terms": [],
-        "keywords": [
-            "anterior cruciate ligament",
-            "anterior cruciate ligament rupture",
-            "clinical exam",
-            "force",
-            "knee",
-            "pivot shift",
-            "torque"
-        ]
-    },
-    {
-        "title": "Impact of adherence to oral nutritional supplements on nutrition status and muscle strength in patients with gastrointestinal cancer: A prospective observational longitudinal study.",
-        "abstract": "Given the lack of evidence regarding the effects of adherence to oral nutritional supplements (ONS) and the types of formulas used in clinical practice, we aimed to assess the impact of adherence to ONS and the high-protein formula on the nutrition status and muscle strength in patients with gastrointestinal cancer.",
-        "mesh_terms": [],
-        "keywords": [
-            "gastrointestinal cancer",
-            "muscle strength",
-            "nutrition status",
-            "nutrition support",
-            "oral nutritional supplements"
-        ]
-    },
-    {
         "title": "lncRNA LINC02323 predicts adverse neoadjuvant chemotherapy outcomes of gastric cancer patients and regulates cell sensitivity to 5-fluorouracil by negatively modulating miR-139-3p.",
         "abstract": "Drug resistance is a challenging problem in the clinical chemotherapy of gastric cancer. Identification of predictive biomarkers for chemotherapy outcomes could improve therapeutic efficacy and patient prognosis. This study aimed to assess the significance of long non-coding RNA (lncRNA) LINC02323 in gastric cancer progression and neoadjuvant chemotherapy and to explore its potential regulatory mechanism.",
         "mesh_terms": [
@@ -4177,57 +4471,6 @@
             "neoadjuvant chemotherapy",
             "prognosis"
         ]
-    },
-    {
-        "title": "Clinical Value of IgG Antibody Test in Screening for Clonorchis sinensis Infection in High-Risk Population.",
-        "abstract": "In areas where C. sinensis is endemic, early screening and diagnosis of C. sinensis infection is crucial to prevent complications and interrupt the chain of transmission. Testing for C. sinensis IgG antibodies is frequently employed as a screening method for detecting the disease. However, its effectiveness in populations with a high risk remains to be determined. This study aimed to evaluate the clinical value of IgG antibody testing for screening C. sinensis infection in high-risk populations.",
-        "mesh_terms": [
-            "Humans",
-            "Immunoglobulin G",
-            "Male",
-            "Female",
-            "Middle Aged",
-            "Adult",
-            "Clonorchiasis",
-            "Antibodies, Helminth",
-            "Animals",
-            "Enzyme-Linked Immunosorbent Assay",
-            "Aged",
-            "Young Adult",
-            "Clonorchis Sinensis",
-            "Adolescent",
-            "Child",
-            "Feces",
-            "Sensitivity And Specificity",
-            "Mass Screening",
-            "Child, Preschool",
-            "Risk Factors",
-            "Parasite Egg Count",
-            "China"
-        ],
-        "keywords": []
-    },
-    {
-        "title": "Evaluating the Impact of Rapid Multiplex PCR Testing on Meningitis and Encephalitis Diagnosis: a Retrospective Analysis.",
-        "abstract": "Meningitis and encephalitis are life-threatening neurological emergencies requiring prompt diagnosis and treatment. Traditional diagnostic methods often lack the speed and sensitivity needed for rapid clinical decision-making. This study evaluates the effectiveness of rapid multiplex PCR testing in diagnosing meningitis and encephalitis.",
-        "mesh_terms": [
-            "Humans",
-            "Multiplex Polymerase Chain Reaction",
-            "Retrospective Studies",
-            "Middle Aged",
-            "Adult",
-            "Aged",
-            "Female",
-            "Male",
-            "Encephalitis",
-            "Aged, 80 And Over",
-            "Meningitis",
-            "Young Adult",
-            "Sensitivity And Specificity",
-            "Herpesvirus 1, Human",
-            "Herpesvirus 3, Human"
-        ],
-        "keywords": []
     },
     {
         "title": "Community-Based Mental Health Improvement Initiatives: A Narrative Review and Indiana Case Study.",
@@ -4274,12 +4517,6 @@
         ]
     },
     {
-        "title": "Economic Evaluations of Health Care Interventions in Pediatric Hospital Care.",
-        "abstract": "The hospital medicine movement thrives in a health care environment committed to providing high-quality, safe, and value-based care. Hospitalists and hospitals continually grapple with many decisions regarding adopting new interventions and deadopting established ones. These decisions span the gamut from tests, treatments, and supportive care, to care models. Traditionally, the choice to adopt one intervention over another is commonly thought of in terms of its direct impact on patient outcomes, benefits, and harms. However, the evolving landscape of health care, characterized by increasing constraints on resources necessitates a broader perspective, one that includes a thorough consideration of the economic implications. The goal is not to minimize costs but rather to maximize value, outcomes achieved for money spent. Economic evaluations of health care interventions can provide this information by quantifying value and assisting health care providers, hospitals, and health systems in deciding which intervention to adopt. Economic evaluations deal with both inputs (ie, costs) and outputs (ie, consequences). Few economic evaluations in pediatric hospital medicine have been published, and many clinicians are unfamiliar with them. This paper discusses the economic evaluation of health care interventions with special attention to the pediatric hospitalist and hospital care. The paper aims to give readers an understanding of the key concepts underlying economic evaluations.",
-        "mesh_terms": [],
-        "keywords": []
-    },
-    {
         "title": "Clinical outcomes in patients in any phase of CML treated with ponatinib in France-Data from the TOPASE observational study.",
         "abstract": "The TOPASE study was set up to evaluate the outcomes of chronic myeloid leukaemia [CML] patients treated with ponatinib (PON) in a real-world setting in France. One hundred and twenty CML patients, 105 in chronic phase (CP), 8 in accelerated phase (AP) and 7 in blastic phase (BP) were included. Fifty-one (49%) of the CP-CML patients were in third line of treatment. The trigger for PON initiation in CP-CML was 'poor response' in 67 patients, 'poor tolerance' in 28 patients and 'response enhancement' in seven patients. The median dose at initiation was 30\u2009mg/day [Q1; Q3\u2009=\u200915; 30] in CP-CML and 45\u2009mg/day [Q1; Q3\u2009=\u200930; 45] in AP/BP-CML. Of 98 CP-CML evaluable patients, 72 (73.5%) were considered as responders (MMR) at one time point at least once, especially for those in second line of treatment and/or presenting a T315I mutation. Ninety-six of 120 (80%) patients reported at least one adverse event. An arterial occlusive event (AOE) was reported in 11 patients (9.2%). Thus, these real-life data confirm the potency of ponatinib in resistant or intolerant patients with an acceptable safety profile in non-selected patients. NCT number: NCT04048564.",
         "mesh_terms": [],
@@ -4288,19 +4525,6 @@
             "TKI",
             "ponatinib",
             "real\u2010life setting"
-        ]
-    },
-    {
-        "title": "Revisiting the Efficacy and Safety of Bivalirudin in Patients With ST-Segment Elevation Myocardial Infarction Undergoing Percutaneous Coronary Intervention: Insights From a Mixed Treatment Comparison Meta-Analysis of Randomized Trials.",
-        "abstract": "Randomized trials of bivalirudin in patients with ST elevation myocardial infarction (STEMI) have yielded heterogeneous results.",
-        "mesh_terms": [],
-        "keywords": [
-            "Gp2b3a inhibitors",
-            "STEMI",
-            "bivalirudin",
-            "efficacy",
-            "heparin",
-            "safety"
         ]
     },
     {
@@ -4382,18 +4606,6 @@
         ]
     },
     {
-        "title": "Clinical Efficacy of CBCT and 3D-Printed Replicas in Molar Autotransplantation: A Controlled Clinical Trial.",
-        "abstract": "To evaluate the efficacy of the combined cone-beam (CBCT)/3D-replicas protocol on the clinical and radiographic outcomes of autotransplanted molars.",
-        "mesh_terms": [],
-        "keywords": [
-            "cone beam computed tomography",
-            "immature",
-            "printed tooth replica",
-            "third molar",
-            "tooth transplantation"
-        ]
-    },
-    {
         "title": "Carbamazepine-induced Stevens-Johnson Syndrome: A Case Report with Review of the Literature.",
         "abstract": "Stevens-Johnson Syndrome (SJS) is an infrequent yet severe mucocutaneous reaction that involves less than 10% of the Body Surface Area (BSA). It is predominantly induced by certain medications, including anticonvulsants (e.g., Lamotrigine, Carbamazepine, Phenytoin, Phenobarbitone), Allopurinol at doses above 100 mg per day, and sulphonamides (e.g., Cotrimoxazole, Sulfasalazine). Genetic predispositions, particularly the presence of the HLA-B*1502 allele, significantly increase the risk of developing SJS. This case report discusses a unique presentation of SJS in a young female patient, emphasizing the critical need for genetic screening and careful monitoring when prescribing Carbamazepine, especially in populations at higher genetic risk.",
         "mesh_terms": [],
@@ -4432,31 +4644,6 @@
         ]
     },
     {
-        "title": "Evaluation of quality of life and satisfaction in patients undergoing laparoscopic Mitrofanoff procedure.",
-        "abstract": "The Mitrofanoff principle has been extensively evaluated in terms of associated morbidity and mortality. However, there is limited literature specifically addressing quality of life (QoL), particularly concerning the laparoscopic procedure. The aim of this study was to assess the impact of laparoscopic appendicovesicostomy (LA) on QoL by using a specific questionnaire targeted at patients and their families.",
-        "mesh_terms": [
-            "Humans",
-            "Quality Of Life",
-            "Male",
-            "Female",
-            "Laparoscopy",
-            "Patient Satisfaction",
-            "Child",
-            "Adolescent",
-            "Surveys And Questionnaires",
-            "Follow-Up Studies",
-            "Length Of Stay",
-            "Urinary Catheterization",
-            "Urinary Incontinence",
-            "Treatment Outcome"
-        ],
-        "keywords": [
-            "Quality of life",
-            "Urinary bladder, neurogenic",
-            "Urinary catheterization"
-        ]
-    },
-    {
         "title": "Influence of the post-processing protocol on a biocompatible 3D-printed resin.",
         "abstract": "This study aimed to evaluate the cytotoxicity of a biocompatible 3D-printed resin material for occlusal devices after post-processing with two different high-intensity UV-polymerization devices and two rinsing solvents, in the presence of human gingival fibroblasts (HGFs).",
         "mesh_terms": [],
@@ -4466,19 +4653,6 @@
             "cytotoxicity",
             "dental resins",
             "post\u2010processing"
-        ]
-    },
-    {
-        "title": "Mobile stroke units services in Germany: A cost-effectiveness modeling perspective on catchment zones, operating modes, and staffing.",
-        "abstract": "Investigating the cost-effectiveness of future mobile stroke unit (MSU) services with respect to local idiosyncrasies is essential for enabling large-scale implementation of MSU services. The aim of this study was to assess the cost-effectiveness for varying urban German settings and modes of operation.",
-        "mesh_terms": [],
-        "keywords": [
-            "acute stroke care",
-            "acute stroke therapy",
-            "computed tomography",
-            "economic evaluation",
-            "mobile stroke unit",
-            "telemedicine"
         ]
     },
     {
@@ -4506,30 +4680,6 @@
         ]
     },
     {
-        "title": "The Effect of Implantoplasty on Fracture Resistance and Implant Surface Changes: An In\u00a0Vitro and Finite Element Analysis Study.",
-        "abstract": "Implantoplasty can be performed on implants diagnosed with peri-implantitis to facilitate implant decontamination and improve access for oral home care. However, its effect on the mechanical strength of the implant is still uncertain. This study aimed to evaluate the effect of implantoplasty on the fracture resistance of dental implants with various degrees of bone loss, as well as its surface changes.",
-        "mesh_terms": [],
-        "keywords": [
-            "dental implant",
-            "fracture resistance",
-            "implantoplasty",
-            "peri\u2010implantitis",
-            "surface roughness"
-        ]
-    },
-    {
-        "title": "Epoxymicheliolide Reduces Radiation-Induced Senescence and Extracellular Matrix Formation by Disrupting NF-\u03baB and TGF-\u03b2/SMAD Pathways in Lung Cancer.",
-        "abstract": "Lung cancer is a major cause of cancer-related mortality, and radiotherapy is often limited by tumor resistance and side effects. This study explores whether epoxymicheliolide (ECL), a compound from feverfew, can enhance radiotherapy efficacy in lung cancer. We tested ECL on A549 and PC-9 lung cancer cell lines to evaluate its effect on x-ray irradiation. We measured apoptosis, NF-\u03baB pathway inhibition, TGF-\u03b2 secretion reduction, and epithelial-mesenchymal transition suppression. In\u00a0vivo, C57BL/6 mice with lung tumors received ECL and radiotherapy. ECL enhanced the antiproliferative effects of x-ray irradiation, induced apoptosis in senescent cells, inhibited the NF-\u03baB pathway, reduced TGF-\u03b2 levels, and suppressed epithelial-mesenchymal transition. ECL also inhibited tumor growth and improved survival in mice. ECL is a promising adjunct to radiotherapy for lung cancer, improving treatment outcomes by targeting multiple tumor progression mechanisms. It offers potential for enhanced management of lung cancer.",
-        "mesh_terms": [],
-        "keywords": [
-            "NF\u2010\u03baB",
-            "TGF\u2010\u03b2/SMAD",
-            "epoxymicheliolide",
-            "extracellular matrix formation",
-            "radiation\u2010induced senescence"
-        ]
-    },
-    {
         "title": "Nursing practice of guidelines for prevention and control of vascular Catheter-Related bloodstream infections.",
         "abstract": "To apply the Ottawa Model of Research Use to translate the Guidelines for the Prevention and Control of Vascular Catheter-Associated Bloodstream Infections.",
         "mesh_terms": [],
@@ -4552,38 +4702,6 @@
         ]
     },
     {
-        "title": "Anxiety and Depression Are Associated with Poor Long-term Quality of Life in Moderate-to-Severe Ulcerative Colitis: Results of a 3-Year Longitudinal Study of the MOSAIK Cohort.",
-        "abstract": "We previously reported that patients with moderate-to-severe ulcerative colitis (UC) often experience common mental disorders (CMDs) such as anxiety and depression, necessitating immediate psychological interventions within the first 4 weeks of diagnosis. In this 3-year follow-up study of the MOSAIK cohort in Korea, we examined the effects of CMDs at initial diagnosis on clinical outcomes and health-related quality of life (HRQoL).",
-        "mesh_terms": [],
-        "keywords": [
-            "Anxiety",
-            "Depression",
-            "Disease outcomes",
-            "Quality of life",
-            "Ulcerative colitis"
-        ]
-    },
-    {
-        "title": "Effect of Lidocaine on Ciprofol Dosage and Efficacy in Patients Who Underwent Gastroscopy Sedation.",
-        "abstract": "BACKGROUND Intravenous ciprofol is a short-acting sedative with minimal respiratory and circulatory suppression and limited analgesia. Intravenous lidocaine provides analgesia during surgical procedures. This study included 70 patients who underwent gastroscopy with analgesia and aimed to evaluate the effects of intravenous lidocaine on the dose of ciprofol required to produce 50% of the maximal effect (ED50). MATERIAL AND METHODS Seventy patients scheduled for elective painless gastroscopy were randomly assigned into 2 groups: group L (n=35, received ciprofol and 1.5 mg/kg lidocaine) and group S (n=35, received ciprofol and normal saline). The primary outcomes measured were the ED50 and the 95% effective dose (ED95) of ciprofol, determined using the modified up-down sequential method and Probit analysis. Secondary outcomes included induction, operation, and recovery times; monitoring of vital signs such as mean arterial pressure, heart rate, and oxygen saturation; and evaluation of postoperative adverse reactions, including sore throat, nausea, vomiting, abdominal pain, and satisfaction scores from endoscopists and anesthesiologists. RESULTS The ED50 of ciprofol in group L was 0.315 mg/kg (95% CI, 0.291-0.342 mg/kg), which was significantly lower than that in group S, 0.42 mg/kg (95% CI, 0.371-0.491 mg/kg). Additionally, group L exhibited shorter induction and recovery times, a lower incidence of postoperative sore throat, and a temporary drop in blood pressure following induction. CONCLUSIONS Intravenous lidocaine during painless gastroscopy reduces the required ciprofol dose, shortens induction and recovery times, and lowers the incidence of postoperative complications, such as sore throat. These findings support its effective role in improving sedation quality and patient outcomes during gastroscopy.",
-        "mesh_terms": [
-            "Humans",
-            "Lidocaine",
-            "Male",
-            "Female",
-            "Gastroscopy",
-            "Middle Aged",
-            "Adult",
-            "Hypnotics And Sedatives",
-            "Aged",
-            "Dose-Response Relationship, Drug",
-            "Conscious Sedation",
-            "Anesthetics, Local",
-            "Cyclopropanes"
-        ],
-        "keywords": []
-    },
-    {
         "title": "Mid-Term Results of Pulmonary Valve-Sparing Repair for Tetralogy of Fallot With Pulmonary Stenosis.",
         "abstract": "The transannular patch remains the most common procedure performed for patients with Tetralogy of Fallot (TOF) with pulmonary stenosis. Pulmonary regurgitation has a negative impact on early and late outcomes. To address this issue pulmonary valve-sparing repair (PVSR) has been developed. Our study goal is to evaluate the mid-term outcomes (five years) of PVSR at our institution.",
         "mesh_terms": [],
@@ -4592,50 +4710,6 @@
             "pulmonary stenosis",
             "pulmonary valve",
             "ventricular septal defect"
-        ]
-    },
-    {
-        "title": "Assessing ChatGPT's cybersecurity implications in Saudi Arabian healthcare and education sectors: A comparative study.",
-        "abstract": "This study aims to critically evaluate ChatGPT's impact on cybersecurity in healthcare and education sectors.",
-        "mesh_terms": [],
-        "keywords": [
-            "ChatGPT",
-            "artificial intelligence",
-            "cybersecurity",
-            "data privacy",
-            "educational technology",
-            "healthcare security"
-        ]
-    },
-    {
-        "title": "Generic Volar Locking Plate Use in Distal Radius Fractures: A Prospective Randomized Study to Evaluate Clinical Outcomes and Cost Reduction.",
-        "abstract": "The purpose of this study was to evaluate differences in 90-day clinical outcomes between patients treated with generic volar locking plates (VLPs) and conventional VLPs in distal radius fractures. Secondary aims included assessing for differences in surgical characteristics and cost between the groups.",
-        "mesh_terms": [],
-        "keywords": [
-            "anatomy",
-            "basic science",
-            "bone",
-            "diagnosis",
-            "distal radius",
-            "fracture/dislocation",
-            "health policy",
-            "research and health outcomes",
-            "specialty",
-            "surgery",
-            "trauma",
-            "wrist"
-        ]
-    },
-    {
-        "title": "Decadal changes in nocturia among American middle-aged and older men.",
-        "abstract": "To estimate the prevalence of nocturia in middle-aged and elderly men and evaluate its associated factors and changes over time.",
-        "mesh_terms": [],
-        "keywords": [
-            "NHANES",
-            "lifestyle",
-            "nocturia",
-            "related factors",
-            "trend"
         ]
     },
     {
@@ -4723,48 +4797,6 @@
         ]
     },
     {
-        "title": "The impact of in-house education on staff confidence in delivering palliative and end-of-life care: a service evaluation.",
-        "abstract": "Palliative and end-of-life care (EoLC) education is available to all community and hospital healthcare staff in one NHS trust in the north-east of England. It is also available to care home and domiciliary care staff within the geographical area of the trust.",
-        "mesh_terms": [
-            "Humans",
-            "Terminal Care",
-            "Palliative Care",
-            "England",
-            "State Medicine",
-            "Attitude Of Health Personnel",
-            "Inservice Training",
-            "Surveys And Questionnaires"
-        ],
-        "keywords": [
-            "Education",
-            "End-of-life care",
-            "Palliative care",
-            "Patient care",
-            "Staff confidence"
-        ]
-    },
-    {
-        "title": "The Effect of Rosuvastatin on Facial Nerve Regeneration After Facial Nerve Injury: An Experimental Animal Study.",
-        "abstract": "Rosuvastatin is an antihyperlipidemic statin group pharmacological agent with antioxidant, neuroprotective, and anti-inflammatory effects. In this study, we aimed to examine the functional, electrophysiological, and histopathological effects of rosuvastatin or in combination with corticosteroids on facial nerve regeneration in rats with traumatic peripheral facial paralysis (PFP).",
-        "mesh_terms": [],
-        "keywords": [
-            "facial nerve",
-            "neuroprotective",
-            "regeneration",
-            "rosuvastatin"
-        ]
-    },
-    {
-        "title": "Metal-Free Custom-Made Zirconia Implants-A Prospective 5-Year Follow-Up Single-Arm Clinical Trial.",
-        "abstract": "Dental implants made of zirconia (ZrO2) are a potential alternative for titanium implants in dentistry because of their good biocompatibility, mechanical properties and excellent aesthetic results. However, solid long-term scientific data to prove clinical success of ZrO2 implants are scarce.",
-        "mesh_terms": [],
-        "keywords": [
-            "dental implants",
-            "metal\u2010free dentistry",
-            "zirconia"
-        ]
-    },
-    {
         "title": "The peri-operative implications of sodium-glucose co-transporter 2 inhibitors: a narrative review.",
         "abstract": "Sodium-glucose co-transporter 2 inhibitors are a novel class of antihyperglycaemic drugs used in the management of type 2 diabetes, that improve glycaemic control, cardiovascular outcomes and promote weight loss. They are also approved for the treatment of heart failure and chronic kidney disease in patients with or without diabetes. This narrative review discusses the peri-operative effects and implications of sodium-glucose co-transporter 2 inhibitors and gives an overview of current evidence and existing peri-operative guidelines.",
         "mesh_terms": [],
@@ -4774,20 +4806,6 @@
             "fasting",
             "ketoacidosis",
             "peri\u2010operative"
-        ]
-    },
-    {
-        "title": "Mapping of the health of the Nation Outcomes Scale (HoNOS) and Positive and Negative Symptom Scale (PANSS) to the EQ-5D-3L in psychosis patients using the PHAMOUS study.",
-        "abstract": "When health outcomes relevant for economic evaluations are unavailable, algorithms can be developed to map utilities using available clinical outcome measures. This study aims to develop two mapping algorithms estimating EuroQol-5 dimension-3 level (EQ-5D-3\u2009L) utilities using the clinician-rated Health of the Nation Outcome Scores (HoNOS) and Positive and Negative Syndrome Scale (PANNS).",
-        "mesh_terms": [],
-        "keywords": [
-            "EQ-5D",
-            "HoNOS",
-            "PANSS",
-            "mapping",
-            "prediction",
-            "psychotic disorders",
-            "severe mental illness"
         ]
     },
     {
@@ -4801,24 +4819,6 @@
             "shift work",
             "working memory"
         ]
-    },
-    {
-        "title": "Low Aortic Pulsatility Index and Pulmonary Artery Pulsatility Index Are Associated With Increased Mortality in Patients With Dilated Cardiomyopathy Awaiting Heart Transplantation.",
-        "abstract": "Patients with dilated cardiomyopathy (DCM) tend to be accompanied by biventricular impairment. We hypothesized that the combination of the aortic pulsatility index (API) and pulmonary artery pulsatility index (PAPI) could refine risk stratification in DCM.",
-        "mesh_terms": [],
-        "keywords": [
-            "Dilated cardiomyopathy",
-            "Heart transplantation",
-            "Hemodynamics",
-            "Prognosis",
-            "Ventricular function"
-        ]
-    },
-    {
-        "title": "Associations between Leisure and Work Time Activity Behavior and 24 H Ambulatory Blood Pressure among Aging Workers.",
-        "abstract": "Purpose: The associations between work time, leisure-time, and non-workday physical activity (PA) and sedentary behavior (SED) and 24 h ambulatory blood pressure (BP) are not well known. Therefore, the aim of this study was to evaluate the associations between domain-specific activity behavior and 24 h blood pressure.Methods: A hundred and fifty-six aging workers (mean age 62.4 [SD 1.0] years, BMI 26.2 [4.5] kg/m2, 84 % women, 75 % non-manual occupation) from the Finnish Retirement and Aging study (FIREA) were included. Standing, light and moderate-to-vigorous PA (LPA and MVPA, respectively), and SED were measured using thigh-worn accelerometers and work time, leisure-time, and non-workdays were distinguished using a diary. Ambulatory 24 h BP was analyzed as mean daytime and nighttime systolic and diastolic BP, and the nocturnal BP dipping percentage was calculated. Associations were examined with linear regression analysis adjusting for age, sex, occupation, work time mode, job strain, BMI, BP medication, and accelerometer wear time.Results: Higher work time SED associated with lower nighttime diastolic BP (B = -0.92, 95% CI -1.83, -0.01). In addition, higher work time standing associated with higher daytime diastolic BP (B = 1.34, 95% CI 0.03, 2.65) and higher work time LPA with less diastolic BP dipping (B = -3.57, 95% CI -6.80, -0.34). MVPA in any domain was not associated with ambulatory BP.Conclusions: Higher work time SED associated with a more favorable diastolic BP, and higher work time PA associated with more adverse diastolic BP among aging workers. In conclusion, work time, rather than leisure time or non-workday, activity behavior seems to associate with 24 h ambulatory BP.",
-        "mesh_terms": [],
-        "keywords": []
     },
     {
         "title": "Caloric requirement targets for nutritional support in adult autoimmune encephalitis: a retrospective cohort study.",
