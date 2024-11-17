@@ -78,8 +78,92 @@ def create_readmission_dataset(data_address='../data/discharge_processed.csv',
     return readmission_data
 
 
+import pandas as pd
+
+def create_retrieval_dataset(data_address='../data/discharge_processed.csv', query_col='Chief Complaint', corpus_col='History of Present Illness',
+                             output_dir='../data/discharge_retrieval_dataset.csv'):
+    # Load the data
+    data = pd.read_csv(data_address)
+    
+    # Select relevant columns for the retrieval task
+    # Example: 'Chief Complaint' as the query and 'Brief Hospital Course' as the corpus
+    retrieval_data = data[[query_col, corpus_col]].dropna()
+    
+    # Rename columns to 'query' and 'corpus'
+    retrieval_data.columns = ['query', 'corpus']
+    
+    # Save the retrieval dataset to CSV
+    retrieval_data.to_csv(output_dir, index=False)
+    
+    print(f"Retrieval dataset saved to {output_dir}")
+    return retrieval_data
+    
+
+import pandas as pd
+import itertools
+import random
+
+import pandas as pd
+
+import pandas as pd
+
+def create_pair_classification_dataset(data_address='../data/discharge_processed.csv',
+                                       col1='Chief Complaint',
+                                       col2='Discharge Diagnosis',
+                                       output_file='../data/mimic_pair_classification.csv',
+                                       num_samples=1000):
+    # Load the data
+    data = pd.read_csv(data_address)
+    
+    # Ensure col1 and col2 are present and drop rows with missing values
+    data = data[[col1, col2]].dropna()
+    
+    # Convert col2 (e.g., 'Discharge Diagnosis') to lowercase for uniformity
+    data[col2] = data[col2].str.lower()
+
+    # Sample a specified number of rows
+    sampled_data = data.sample(num_samples, replace=False)
+
+    # Initialize lists for positive and negative pairs
+    positive_pairs = []
+    negative_pairs = []
+
+    # Iterate over the sampled rows to create positive and negative pairs
+    for _, row in sampled_data.iterrows():
+        # Create a positive pair by pairing the row with itself
+        positive_pairs.append((row[col1], row[col2], 1))  # Label 1 for positive pair
+
+        # Find a row with a different label (different 'Discharge Diagnosis') for a negative pair
+        different_label_row = data[data[col2] != row[col2]].sample(1, replace=False)
+        if not different_label_row.empty:
+            negative_pairs.append((row[col1], different_label_row.iloc[0][col2], 0))  # Label 0 for negative pair
+
+    # Combine positive and negative pairs
+    pairs = positive_pairs + negative_pairs
+
+    # Convert to a DataFrame
+    pair_df = pd.DataFrame(pairs, columns=[f'{col1}_text', f'{col2}_text', 'label'])
+
+    # Save to CSV
+    pair_df.to_csv(output_file, index=False)
+    print(f"Pair classification dataset saved to {output_file}")
+    return pair_df
+# Example usage
+create_pair_classification_dataset()
+
+
+
+
+
+
+
 if __name__ == "__main__":
     # create_classification_data()
-    readmission_dataset = create_readmission_dataset()
-    print(readmission_dataset.Readmission.value_counts())
+    # readmission_dataset = create_readmission_dataset()
+    # print(readmission_dataset.Readmission.value_counts())
+    # retrieval_data= create_retrieval_dataset()
+    # print(retrieval_data.head())
+    pair_classification_data = create_pair_classification_dataset()
+    print(pair_classification_data.head())
+
 
