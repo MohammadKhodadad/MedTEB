@@ -65,5 +65,5 @@ def process_dataset(file_path, output_file="../data/mts_dialogue_question_answer
 
 if __name__ == "__main__":
     # Example usage
-    file_path = "https://raw.githubusercontent.com/abachaa/MTS-Dialog/main/Main-Dataset/MTS-Dialog-TrainingSet.csv"  # Path to your dataset
+    file_path = "https://raw.githubusercontent.com/abachaa/MTS-Dialog/main/Main-Dataset/MTS-Dialog-TrainingSet.csv" 
     process_dataset(file_path)
