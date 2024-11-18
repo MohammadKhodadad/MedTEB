@@ -53,5 +53,5 @@ def save_data_as_json(data, filename):
 if __name__ =='__main__':
     categories = ["Machine learning", "Artificial intelligence", "Data science", "Computer vision"]
     dataset = fetch_data_from_categories(categories, max_pages_per_category=50)
-    save_data_as_json(dataset, "wikipedia_dataset.json")
+    save_data_as_json(dataset, "../data/wikipedia_dataset.json")
     print("Dataset saved as wikipedia_dataset.json")
