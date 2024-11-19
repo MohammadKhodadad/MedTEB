@@ -148,8 +148,7 @@ def create_pair_classification_dataset(data_address='../data/discharge_processed
     pair_df.to_csv(output_file, index=False)
     print(f"Pair classification dataset saved to {output_file}")
     return pair_df
-# Example usage
-create_pair_classification_dataset()
+
 
 
 
