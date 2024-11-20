@@ -51,4 +51,4 @@ clustering_tasks = {
 for task_name, categories in clustering_tasks.items():
     output_file = f"../data/clustering/{task_name.replace(' ', '_').lower()}_dataset.json"
     print(f"\nProcessing task: {task_name}")
-    wiki_fetch_data_from_categories(categories, max_pages_per_category=50, output_dir=output_file)
+    wiki_fetch_data_from_categories(categories, max_pages_per_category=500, output_dir=output_file, max_depth=1)
