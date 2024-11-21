@@ -1,2 +1,1 @@
-go deeper
 Create a retrieval problem based on gold standard definition.

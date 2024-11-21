@@ -57,6 +57,81 @@ def download_and_save_medmcqa(output_file="../data/medmcqa_data.csv"):
     df.to_csv(output_file, index=False)
     print(f"MedMCQA data saved to {output_file}")
 
+
+def create_pair_classification_data(output_file="../data/medmcqa_pair_classification.csv"):
+    # Ensure the output directory exists
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    # Load the MedMCQA dataset from Hugging Face
+    dataset = load_dataset("openlifescienceai/medmcqa")
+
+    # Initialize lists for pair classification
+    sentence1 = []  # Questions
+    sentence2 = []  # Options
+    labels = []     # 1 for correct, 0 for incorrect
+
+    # Iterate over each split in the dataset (train, validation, test)
+    for split in dataset:
+        print(f"Processing split: {split}")
+        for example in dataset[split]:
+            question = example.get("question", "")
+            correct_option = example.get("cop", "")  # Correct option index (1-based)
+
+            # Create pairs for each option
+            for i, option_text in enumerate([example.get("opa", ""), example.get("opb", ""), 
+                                             example.get("opc", ""), example.get("opd", "")], start=0):
+                if option_text:  # Ensure the option text is not empty
+                    sentence1.append(question)
+                    sentence2.append(option_text)
+                    labels.append(1 if str(i) == str(correct_option) else 0)
+
+    # Create a DataFrame with the pair classification data
+    df = pd.DataFrame({
+        "sentence1": sentence1,
+        "sentence2": sentence2,
+        "label": labels
+    })
+
+    # Save the DataFrame to a CSV file
+    df.to_csv(output_file, index=False)
+    print(f"Pair classification data saved to {output_file}")
+
+
+def create_retrieval_dataset(output_file="../data/medmcqa_retrieval_dataset.csv"):
+    # Ensure the output directory exists
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    # Load the MedMCQA dataset from Hugging Face
+    dataset = load_dataset("openlifescienceai/medmcqa")
+
+    # Initialize lists for retrieval
+    queries = []      # Questions
+    documents = []    # Explanations
+
+    # Iterate over each split in the dataset (train, validation, test)
+    for split in dataset:
+        print(f"Processing split: {split}")
+        for example in dataset[split]:
+            question = example.get("question", "")
+            explanation = example.get("exp", "")
+
+            # Ensure both question and explanation are not empty
+            if question and explanation:
+                queries.append(question)
+                documents.append(explanation)
+
+    # Create a DataFrame with the retrieval data
+    df = pd.DataFrame({
+        "query": queries,
+        "document": documents
+    })
+
+    # Save the DataFrame to a CSV file
+    df.to_csv(output_file, index=False)
+    print(f"Retrieval dataset saved to {output_file}")
+
+
 if __name__ == "__main__":
-    # Download and save the MedMCQA dataset
-    download_and_save_medmcqa()
+    # download_and_save_medmcqa()
+    # create_pair_classification_data()
+    create_retrieval_dataset()
