@@ -10,7 +10,7 @@ def clean_html(raw_html):
     clean_text = re.sub('<.*?>', '', raw_html)
     return clean_text
 
-def get_article_details(pmid):
+def pmc_get_article_details(pmid):
     handle = efetch(db='pmc', id=str(pmid), retmode='xml')
     xml_data = read(handle)
     
@@ -30,7 +30,7 @@ def get_article_details(pmid):
         "keywords": keywords
     }
 
-def fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file="data/pubmed_data_by_category.json"):
+def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file="data/pubmed_data_by_category.json"):
     all_articles = {}
 
     for category_name, query in categories.items():
@@ -44,7 +44,7 @@ def fetch_and_save_articles_by_category(categories, max_articles_per_category=50
 
         for pmid in id_list:
             try:
-                article_details = get_article_details(pmid)
+                article_details = pmc_get_article_details(pmid)
                 category_articles.append(article_details)
             except Exception as e:
                 print(f"Error fetching data for PMID {pmid}: {e}")
@@ -53,7 +53,7 @@ def fetch_and_save_articles_by_category(categories, max_articles_per_category=50
 
     with open(output_file, mode='w', encoding='utf-8') as file:
         json.dump(all_articles, file, indent=4)
-
+    return all_articles
     print(f"Data saved to {output_file}")
 
 if __name__ == "__main__":
@@ -64,4 +64,4 @@ if __name__ == "__main__":
         "Clinical Care": "hospital OR intensive care OR emergency room OR clinical care OR healthcare"
     }
 
-    fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file='../data/pmc_data_by_category.json')
+    pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file='../data/pmc_data_by_category.json')
