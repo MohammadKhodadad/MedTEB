@@ -150,8 +150,8 @@ def wiki_generate_sentence_pair(content, page_title):
     """
     prompt = (
         f"Using the following content from a Wikipedia page titled '{page_title}', "
-        "generate two related sentences based on the content. Ensure the sentences convey meaningful information "
-        "and are closely related to each other.\n\n"
+        "generate two related sentences based on the content. Ensure the sentences convey meaningful information. "
+        "and are closely related to each other. Ensure that the sentences do not have the same keywords or the same phrasing.\n\n"
         f"Content:\n{content}\n\n"
         "Output as JSON with keys 'sentence1' and 'sentence2' without any code formatting, backticks, or markdown."
     )
@@ -182,18 +182,21 @@ def wiki_create_pair_classification_data(categories, max_pages_per_category=50, 
     pairs = []
 
     for page_title, content in wiki_documents.items():
-        if isinstance(content, dict):
-            # Combine all section content into a single text
-            full_text = json.dumps(content)
+        try:
+            if isinstance(content, dict):
+                # Combine all section content into a single text
+                full_text = json.dumps(content)
 
-            # Generate positive pair
-            sentence_pair = wiki_generate_sentence_pair(full_text, page_title)
-            if sentence_pair["sentence1"] and sentence_pair["sentence2"]:
-                pairs.append({
-                    "sentence1": sentence_pair["sentence1"],
-                    "sentence2": sentence_pair["sentence2"],
-                    "label": 1  # Positive pair
-                })
+                # Generate positive pair
+                sentence_pair = wiki_generate_sentence_pair(full_text, page_title)
+                if sentence_pair["sentence1"] and sentence_pair["sentence2"]:
+                    pairs.append({
+                        "sentence1": sentence_pair["sentence1"],
+                        "sentence2": sentence_pair["sentence2"],
+                        "label": 1  # Positive pair
+                    })
+        except Exception as e:
+            print(e)
     neg_pairs=[]
     for idx, pair in enumerate(pairs):
         if pair["label"] == 1:  # Only process positive pairs

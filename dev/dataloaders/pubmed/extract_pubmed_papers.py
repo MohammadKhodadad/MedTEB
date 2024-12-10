@@ -141,7 +141,7 @@ def pubmed_generate_sentence_pair(content):
     prompt = (
         f"Using the following content from a pubmed article,"
         "generate two related sentences based on the content. Ensure the sentences convey meaningful information "
-        "and are closely related to each other.\n\n"
+        "and are closely related to each other. Ensure that the sentences do not have the same keywords or the same phrasing.\n\n"
         f"Content:\n{content}\n\n"
         "Output as JSON with keys 'sentence1' and 'sentence2' without any code formatting, backticks, or markdown."
     )

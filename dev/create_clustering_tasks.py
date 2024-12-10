@@ -4,6 +4,7 @@ from dataloaders.pubmed.extract_pubmed_papers import pubmed_fetch_and_save_artic
 from dataloaders.pmc.extract_pmc_papers import pmc_fetch_and_save_articles_by_category
 
 
+from dataloaders.mimiciv.Mimic_datasets import mimic_create_readmission_dataset, mimic_create_classification_data
 
 
 
@@ -180,3 +181,88 @@ for task_name, categories in tasks.items():
         data = pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file=output_file)
         for category in data.keys():
             print(category,':',len(data[category]))
+
+
+
+
+# Readmission
+
+for t in [3,7,30]:
+    output_file=f'../data/clustering/mimiciv_readmission_{t}_days.csv'
+    if os.path.exists(output_file):
+        print(f"{output_file} already exists")
+    else:
+        mimic_create_readmission_dataset(data_address='./dataloaders/data/discharge_processed_v_3.csv',
+                                   readmission_days=t,output_dir=output_file)
+        
+
+
+
+specific_classification_tasks = {
+    "Infectious_Diseases": {
+        "Respiratory": ["Pneumonia", "COPD exacerbation"],
+        "Soft_Tissue": ["Cellulitis"],
+        "Urinary_Tract": ["Urinary tract infection"],
+        "Biliary_System": ["Choledocholithiasis"]
+    },
+    "Abdominal_Conditions": {
+        "Obstructions": ["Small bowel obstruction", "Partial small bowel obstruction"],
+        "Inflammatory": ["Acute appendicitis", "Acute cholecystitis", "Diverticulitis", "Pancreatitis"],
+        "Pain": ["Abdominal pain", "Chest pain"]
+    },
+    "Musculoskeletal_Disorders": {
+        "Osteoarthritis": ["Right knee osteoarthritis", "Left knee osteoarthritis", "Right hip osteoarthritis", "Left hip osteoarthritis"],
+        "Stenosis": ["Lumbar stenosis", "Cervical stenosis"]
+    },
+    "Neurological_Conditions": {
+        "Seizure_Disorders": ["Epilepsy", "Seizure", "Seizures"],
+        "Critical_Neurology": ["Acute ischemic stroke", "CNS lymphoma", "Syncope"]
+    },
+    "Cancer_Types": {
+        "Breast_Cancer": ["Right breast cancer"],
+        "Prostate_Cancer": ["PROSTATE CANCER"],
+        "Other": ["AML", "Peripheral Arterial Disease"]
+    },
+    "Mortality_and_Risk_Factors": {
+        "Deceased_Status": ["Deceased", "Expired", "Patient expired"],
+        "Obesity": ["Morbid obesity"]
+    }
+}
+
+for task_name, categories in specific_classification_tasks.items():
+    output_file=f'../data/clustering/mimiciv_classification_specific_{task_name}.json'
+    if os.path.exists(output_file):
+        print(f"{output_file} already exists")
+    else:
+        mimic_create_classification_data(data_address='./dataloaders/data/discharge_processed_v_3.csv',cols=categories,output_dir=output_file)
+
+general_classification_tasks = {
+    "Infectious_vs_NonInfectious_Conditions": {
+        "Infectious_Conditions": ["Pneumonia", "Cellulitis", "Urinary tract infection", "Choledocholithiasis", "COPD exacerbation"],
+        "NonInfectious_Conditions": ["Small bowel obstruction", "Acute appendicitis", "Pancreatitis", "Right knee osteoarthritis", "Epilepsy"]
+    },
+    "Neurological_vs_Musculoskeletal_Conditions": {
+        "Neurological_Conditions": ["Seizure", "Acute ischemic stroke", "Syncope", "CNS lymphoma"],
+        "Musculoskeletal_Conditions": ["Right knee osteoarthritis", "Left knee osteoarthritis", "Lumbar stenosis", "Cervical stenosis"]
+    },
+    "Abdominal_vs_Thoracic_Conditions": {
+        "Abdominal_Conditions": ["Acute appendicitis", "Acute cholecystitis", "Diverticulitis", "Small bowel obstruction"],
+        "Thoracic_Conditions": ["Pneumonia", "COPD exacerbation", "Chest pain"]
+    },
+    "Cancer_vs_Chronic_Conditions": {
+        "Cancer": ["Right breast cancer", "PROSTATE CANCER", "AML"],
+        "Chronic_Conditions": ["Peripheral Arterial Disease", "Morbid obesity", "Lumbar stenosis", "COPD exacerbation"]
+    },
+    "Mortality_vs_Survivable_Conditions": {
+        "Mortality_Conditions": ["Deceased", "Expired", "Patient expired", "Acute ischemic stroke"],
+        "Survivable_Conditions": ["Abdominal pain", "Right knee osteoarthritis", "Epilepsy", "Pneumonia"]
+    }
+}
+
+
+for task_name, categories in general_classification_tasks.items():
+    output_file=f'../data/clustering/mimiciv_classification_general_{task_name}.json'
+    if os.path.exists(output_file):
+        print(f"{output_file} already exists")
+    else:
+        mimic_create_classification_data(data_address='./dataloaders/data/discharge_processed_v_3.csv',cols=categories,output_dir=output_file)

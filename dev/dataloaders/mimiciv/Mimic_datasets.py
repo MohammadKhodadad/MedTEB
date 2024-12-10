@@ -1,8 +1,8 @@
 import pandas as pd
 import json
 import tqdm
-def create_classification_data(data_address='../data/discharge_processed.csv',
-                               cols=['small bowel obstruction', 'acute appendicitis', 'acute cholecystitis'],
+def mimic_create_classification_data(data_address='../data/discharge_processed.csv',
+                               cols={"class1":['small bowel obstruction'], "class2":['acute appendicitis'], "class3":['acute cholecystitis']},
                                output_dir="../data/mimic_classification_data.json"):
     # Load the data
     data = pd.read_csv(data_address)
@@ -11,7 +11,7 @@ def create_classification_data(data_address='../data/discharge_processed.csv',
     data['Discharge Diagnosis'] = data['Discharge Diagnosis'].apply(lambda x: x.lower() if isinstance(x, str) else x)
     
     # Initialize the output structure
-    classification_data = {col: [] for col in cols}
+    classification_data = {col: [] for col in cols.keys()}
     
     # Filter relevant columns that can be used for classification
     relevant_columns = [
@@ -23,12 +23,14 @@ def create_classification_data(data_address='../data/discharge_processed.csv',
     ]
     
     # Iterate over each class and collect the relevant data
-    for col in cols:
-        class_data = data[data['Discharge Diagnosis'].str.contains(col, na=False)]
+    for class_name, classes in cols.items():
+        
+        class_data = data[data['Discharge Diagnosis'].apply(lambda x: x in [class_.lower() for class_ in classes])]
+        # print(class_data.shape)
         for _, row in class_data.iterrows():
             # Create a dictionary of relevant fields
             entry = {field: row[field] for field in relevant_columns if field in row}
-            classification_data[col].append(entry)
+            classification_data[class_name].append(entry)
     
     # Save the structured data to a JSON file
     with open(output_dir, 'w', encoding='utf-8') as file:
@@ -39,29 +41,29 @@ def create_classification_data(data_address='../data/discharge_processed.csv',
 
 import pandas as pd
 
-def create_readmission_dataset(data_address='../data/discharge_processed.csv',
+def mimic_create_readmission_dataset(data_address='../data/discharge_processed_v_3.csv',
                                readmission_days=120,output_dir='../data/discharge_processed_with_readmission.csv'):
     # Load the data
     data = pd.read_csv(data_address)
     
     # Convert dates to datetime format
-    data['admitdate'] = pd.to_datetime(data['admitdate'], errors='coerce')
-    data['dischdate'] = pd.to_datetime(data['dischdate'], errors='coerce')
+    data['admittime'] = pd.to_datetime(data['admittime'], errors='coerce')
+    data['dischtime'] = pd.to_datetime(data['dischtime'], errors='coerce')
     
     # Sort by subject_id and Admission Date
-    data = data.sort_values(by=['subject_id', 'admitdate'])
+    data = data.sort_values(by=['subject_id_x', 'admittime'])
     
     # Initialize a new column for readmission
     data['Readmission'] = 0
     
     # Iterate over each patient to check for readmissions
-    for subject_id in tqdm.tqdm(data['subject_id'].unique()):
-        patient_data = data[data['subject_id'] == subject_id]
+    for subject_id in tqdm.tqdm(data['subject_id_x'].unique()):
+        patient_data = data[data['subject_id_x'] == subject_id]
         for i in range(len(patient_data) - 1):
-            discharge_date = patient_data.iloc[i]['dischdate']
-            next_admission_date = patient_data.iloc[i + 1]['admitdate']
+            discharge_date = patient_data.iloc[i]['dischtime']
+            next_admission_date = patient_data.iloc[i + 1]['admittime']
             # Check if the readmission occurred within the specified number of days
-            print((next_admission_date - discharge_date).days)
+            # print((next_admission_date - discharge_date).days)
             if (next_admission_date - discharge_date).days <= readmission_days:
                 data.loc[patient_data.index[i], 'Readmission'] = 1
     
@@ -73,7 +75,10 @@ def create_readmission_dataset(data_address='../data/discharge_processed.csv',
     
     # Filter the data to include only relevant columns
     readmission_data = data[relevant_columns].dropna()
+    readmission_data['text']='Chief Complaint: '+readmission_data['Chief Complaint']+ ' History of Present Illness: '+ readmission_data['History of Present Illness']
+    readmission_data=readmission_data[['text','Readmission']]
     readmission_data.to_csv(output_dir)
+    print(readmission_data.Readmission.value_counts())
     print(f"Data saved to {output_dir}")
     return readmission_data
 
@@ -107,7 +112,7 @@ import pandas as pd
 
 import pandas as pd
 
-def create_pair_classification_dataset(data_address='../data/discharge_processed.csv',
+def mimic_create_pair_classification_dataset(data_address='../data/discharge_processed.csv',
                                        col1='Chief Complaint',
                                        col2='Discharge Diagnosis',
                                        output_file='../data/mimic_pair_classification.csv',
@@ -157,12 +162,12 @@ def create_pair_classification_dataset(data_address='../data/discharge_processed
 
 
 if __name__ == "__main__":
-    # create_classification_data()
+    mimic_create_classification_data()
     # readmission_dataset = create_readmission_dataset()
     # print(readmission_dataset.Readmission.value_counts())
     # retrieval_data= create_retrieval_dataset()
     # print(retrieval_data.head())
-    pair_classification_data = create_pair_classification_dataset()
-    print(pair_classification_data.head())
+    # pair_classification_data = mimic_create_pair_classification_dataset()
+    # print(pair_classification_data.head())
 
 

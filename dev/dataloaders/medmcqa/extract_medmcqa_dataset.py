@@ -58,7 +58,7 @@ def download_and_save_medmcqa(output_file="../data/medmcqa_data.csv"):
     print(f"MedMCQA data saved to {output_file}")
 
 
-def create_pair_classification_data(output_file="../data/medmcqa_pair_classification.csv"):
+def medmc_qa_create_pair_classification_data(output_file="../data/medmcqa_pair_classification.csv"):
     # Ensure the output directory exists
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
