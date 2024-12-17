@@ -2,6 +2,7 @@ import json
 import re
 from Bio import Entrez
 from Bio.Entrez import efetch, read
+import pandas as pd
 
 # Register your email
 Entrez.email = "your@email.com"
@@ -10,6 +11,18 @@ def clean_html(raw_html):
     clean_text = re.sub('<.*?>', '', raw_html)
     return clean_text
 
+def pmc_clean_text(text):
+
+    # Remove non-alphanumeric characters (keep letters, numbers, and spaces)
+    text = re.sub(r'[^a-zA-Z0-9\s:]', '', text)
+    
+    # Replace multiple spaces and newlines with a single space
+    text = re.sub(r'\s+', ' ', text)
+    
+    # Strip leading and trailing spaces and convert to lowercase
+    text = text.strip().lower()
+    
+    return text
 def pmc_get_article_details(pmid):
     handle = efetch(db='pmc', id=str(pmid), retmode='xml')
     xml_data = read(handle)
@@ -30,7 +43,7 @@ def pmc_get_article_details(pmid):
         "keywords": keywords
     }
 
-def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file="data/pubmed_data_by_category.json"):
+def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file="data/pubmed_data_by_category.csv"):
     all_articles = {}
 
     for category_name, query in categories.items():
@@ -51,8 +64,20 @@ def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_categor
 
         all_articles[category_name] = category_articles
 
-    with open(output_file, mode='w', encoding='utf-8') as file:
-        json.dump(all_articles, file, indent=4)
+    # with open(output_file, mode='w', encoding='utf-8') as file:
+    #     json.dump(all_articles, file, indent=4)
+    if output_file:
+        result={'text':[],'label':[]}
+        for category_name in all_articles.keys():
+            # print(all_articles[category_name])
+            for sub_documents in all_articles[category_name]:
+                
+                text=pmc_clean_text('title: '+sub_documents['title']+' abstract: '+sub_documents['abstract'])
+                # print(text)
+                result['text'].append(text)
+                result['label'].append(category_name)
+        result=pd.DataFrame(result)
+        result.to_csv(output_file)
     return all_articles
     print(f"Data saved to {output_file}")
 

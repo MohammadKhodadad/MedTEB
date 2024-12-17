@@ -97,7 +97,7 @@ def medmc_qa_create_pair_classification_data(output_file="../data/medmcqa_pair_c
     print(f"Pair classification data saved to {output_file}")
 
 
-def create_retrieval_dataset(output_file="../data/medmcqa_retrieval_dataset.csv"):
+def medmc_qa_create_retrieval_dataset(output_file="../data/medmcqa_retrieval_dataset.csv"):
     # Ensure the output directory exists
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 

@@ -4,10 +4,27 @@ import random
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
-
+import pandas as pd
+import numpy as np
+import re
 
 # Initialize the Wikipedia API for English
 wiki_wiki = wikipediaapi.Wikipedia('Anonymous Name')
+
+
+
+def wiki_clean_text(text):
+
+    # Remove non-alphanumeric characters (keep letters, numbers, and spaces)
+    text = re.sub(r'[^a-zA-Z0-9\s]:', '', text)
+    
+    # Replace multiple spaces and newlines with a single space
+    text = re.sub(r'\s+', ' ', text)
+    
+    # Strip leading and trailing spaces and convert to lowercase
+    text = text.strip().lower()
+    
+    return text
 
 def save_data_as_json(data, filename):
     with open(filename, "w", encoding="utf-8") as f:
@@ -74,14 +91,26 @@ def wiki_fetch_pages_in_category_recursive(category_name, max_pages=100, max_dep
     
     return documents
 
-def wiki_fetch_data_from_categories(categories, max_pages_per_category=50,max_depth=1,output_dir="../data/wikipedia_dataset.json"):
-    all_documents = {}
+def wiki_fetch_data_from_categories(categories, max_pages_per_category=50,max_depth=1,output_dir="../data/wikipedia_dataset.csv",thr=0.7):
+    all_documents = {'text':[],"label":[]}
 
     for category_name in categories:
         print(f"Fetching pages from category: {category_name}")
         category_documents = wiki_fetch_pages_in_category_recursive(category_name, max_pages=max_pages_per_category, max_depth=max_depth)
-        all_documents[category_name]=category_documents
-    save_data_as_json(all_documents, output_dir)
+        # all_documents[category_name]=category_documents
+        for sub_category_name, sub_documents in category_documents.items():
+            
+            texts=list(sub_documents.values())
+            
+            texts=[wiki_clean_text(text) for text in texts if isinstance(text,str) ]
+            texts=[text for text in texts if len(text)>50 ]
+            labels=[category_name for _ in range(len(texts))]
+            # print(texts)
+            all_documents['text'].extend(texts)
+            all_documents['label'].extend(labels)
+    # print(all_documents)
+    all_documents=pd.DataFrame(all_documents)
+    all_documents.to_csv(output_dir)
     
     return all_documents
 
@@ -118,7 +147,7 @@ def wiki_generate_anonymized_question_answer(content, page_title):
         print(f"Error generating question-answer pair: {e}")
         return {"question": None, "answer": None}
 
-def wiki_create_retrieval_dataset(categories, max_pages_per_category=50, max_depth=1, output_dir="../data/wikipedia_retrieval_dataset.json"):
+def wiki_create_retrieval_dataset(categories, max_pages_per_category=50, max_depth=1, output_file="../data/wikipedia_retrieval_dataset.json"):
     """
     Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
     """
@@ -134,12 +163,13 @@ def wiki_create_retrieval_dataset(categories, max_pages_per_category=50, max_dep
             if qa_pair["question"] and qa_pair["answer"]:
                 retrieval_data.append({
                     "query": qa_pair["question"],
-                    "document": qa_pair["answer"],
+                    "corpus": qa_pair["answer"],
                     "source_title": page_title
                 })
 
     # Save retrieval dataset
-    save_data_as_json(retrieval_data, output_dir)
+    # save_data_as_json(retrieval_data, output_file)   
+    pd.DataFrame(retrieval_data).to_csv(output_file)
 
 
 
@@ -212,7 +242,9 @@ def wiki_create_pair_classification_data(categories, max_pages_per_category=50, 
             })
     pairs.extend(neg_pairs)
     # Save pair classification data
-    save_data_as_json(pairs, output_file)
+    # save_data_as_json(pairs, output_file)
+    pd.DataFrame(pairs).to_csv(output_file)
+
     return pairs
 
 if __name__ =='__main__':

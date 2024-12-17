@@ -7,12 +7,26 @@ import random
 from openai import OpenAI
 from dotenv import load_dotenv
 import tqdm
+import pandas as pd
 # Register your email
 Entrez.email = "your@email.com"
 
 def clean_html(raw_html):
     clean_text = re.sub('<.*?>', '', raw_html)
     return clean_text
+
+def pubmed_clean_text(text):
+
+    # Remove non-alphanumeric characters (keep letters, numbers, and spaces)
+    text = re.sub(r'[^a-zA-Z0-9\s]:', '', text)
+    
+    # Replace multiple spaces and newlines with a single space
+    text = re.sub(r'\s+', ' ', text)
+    
+    # Strip leading and trailing spaces and convert to lowercase
+    text = text.strip().lower()
+    
+    return text
 
 def pubmed_get_article_details(pmid):
     handle = efetch(db='pubmed', id=str(pmid), retmode='xml')
@@ -39,7 +53,7 @@ def pubmed_get_article_details(pmid):
         "keywords": keywords
     }
 
-def pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file="data/pubmed_data_by_category.json"):
+def pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=10, output_file="data/pubmed_data_by_category.json"):
     all_articles = {}
 
     for category_name, query in categories.items():
@@ -60,8 +74,19 @@ def pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_cate
 
         all_articles[category_name] = category_articles
     if output_file:
-        with open(output_file, mode='w', encoding='utf-8') as file:
-            json.dump(all_articles, file, indent=4)
+        result={'text':[],'label':[]}
+        for category_name in all_articles.keys():
+            # print(all_articles[category_name])
+            for sub_documents in all_articles[category_name]:
+                
+                text=pubmed_clean_text('title: '+sub_documents['title']+' abstract: '+sub_documents['abstract'])
+                # print(text)
+                result['text'].append(text)
+                result['label'].append(category_name)
+        result=pd.DataFrame(result)
+        result.to_csv(output_file)
+        # with open(output_file, mode='w', encoding='utf-8') as file:
+        #     json.dump(all_articles, file, indent=4)
 
     print(f"Data saved to {output_file}")
     return all_articles
@@ -97,7 +122,7 @@ def pubmed_generate_anonymized_question_answer(content):
         return {"question": None, "answer": None}
 
 
-def pubmed_create_retrieval_dataset(categories, max_doc_per_category=50, output_file="../data/wikipedia_retrieval_dataset.json"):
+def pubmed_create_retrieval_dataset(categories, max_doc_per_category=10, output_file="../data/wikipedia_retrieval_dataset.json"):
     """
     Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
     """
@@ -116,14 +141,13 @@ def pubmed_create_retrieval_dataset(categories, max_doc_per_category=50, output_
             if qa_pair["question"] and qa_pair["answer"]:
                 retrieval_data.append({
                     "query": qa_pair["question"],
-                    "document": qa_pair["answer"],
+                    "corpus": qa_pair["answer"],
                     "source_title": doc['title']
                 })
 
     # Save retrieval dataset
     if output_file:
-        with open(output_file, mode='w', encoding='utf-8') as file:
-            json.dump(retrieval_data, file, indent=4)
+        pd.DataFrame(retrieval_data).to_csv(output_file)
 
 
 
@@ -166,7 +190,7 @@ def pubmed_generate_sentence_pair(content):
 
 
 
-def pubmed_create_pair_classification_data(categories, max_doc_per_category=50, output_file="../data/wikipedia_pair_classification.json"):
+def pubmed_create_pair_classification_data(categories, max_doc_per_category=10, output_file="../data/wikipedia_pair_classification.json"):
     """
     Create pair classification data using sentences from Wikipedia pages.
     """
@@ -205,8 +229,9 @@ def pubmed_create_pair_classification_data(categories, max_doc_per_category=50, 
     pairs.extend(neg_pairs)
     # Save pair classification data
     if output_file:
-        with open(output_file, mode='w', encoding='utf-8') as file:
-            json.dump(pairs, file, indent=4)
+        pd.DataFrame(pairs).to_csv(output_file)
+        # with open(output_file, mode='w', encoding='utf-8') as file:
+        #     json.dump(pairs, file, indent=4)
     return pairs
 
 if __name__ == "__main__":
@@ -218,5 +243,5 @@ if __name__ == "__main__":
     }
 
     # pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file='../data/pubmed_data_by_category.json')
-    pubmed_create_retrieval_dataset(categories, max_doc_per_category=50, output_file="../data/pubmed_retrieval_data.json")
-    pubmed_create_pair_classification_data(categories, max_doc_per_category=50, output_file="../data/pubmed_pair_classification.json")
+    pubmed_create_retrieval_dataset(categories, max_doc_per_category=10, output_file="../data/pubmed_retrieval_data.json")
+    pubmed_create_pair_classification_data(categories, max_doc_per_category=10, output_file="../data/pubmed_pair_classification.json")
