@@ -5,7 +5,7 @@ import json
 import pandas as pd
 from datasets import Dataset
 from datasets import Dataset, DatasetDict
-from mteb.abstasks.AbsTaskPairClassification import AbsTaskPairClassification
+from mteb.abstasks.AbsTaskClassification import AbsTaskClassification
 from mteb.abstasks.TaskMetadata import TaskMetadata
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
@@ -13,22 +13,23 @@ import pandas as pd
 from mteb import MTEB, get_model
 from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer, models
-def create_pair_classification_task(data_address):
-    class CustomAbsTaskPairClassification(AbsTaskPairClassification):
+from sklearn.model_selection import train_test_split
+def create_classification_task(data_address):
+    class CustomAbsTaskClassification(AbsTaskClassification):
         metadata = TaskMetadata(
-            name="PubMedTitleAbsPairClassification",
+            name="PubMedTitleAbsClassification",
             dataset={"path": "",
                     "revision": " ",
 
             },
             description="",
             reference="https://errors.pydantic.dev/2.9/v/url_parsing",
-            type="PairClassification",
-            category="s2p",
+            type="Classification",
+            category="p2p",
             modalities=["text"],
             eval_splits=["test"],
             eval_langs=["eng-Latn"],
-            main_score="cosine_f1",
+            main_score="f1",
             date=None,
             domains=None,
             task_subtypes=None,
@@ -48,12 +49,19 @@ def create_pair_classification_task(data_address):
             data = pd.read_csv(data_address)
             
             self.dataset = {
-                "test": [{'sentence1':[],'sentence2':[],'labels':[]}]}
-            for i in range(len(data)):
-                    row = data.iloc[i]
-                    self.dataset["test"][0]['sentence1'] .append(row['sentence1'])
-                    self.dataset["test"][0]['sentence2'] .append(row['sentence2'])
-                    self.dataset["test"][0]['labels'] .append(row['label'])
+                "test": {'text':[],'label':[]},
+                "train":{'text':[],'label':[]}}
+            train_data, test_data = train_test_split(data, test_size=0.3, random_state=42)
+
+            # Populate the train dataset
+            for _, row in train_data.iterrows():
+                self.dataset["train"]['text'].append(row['text'])
+                self.dataset["train"]['label'].append(row['label'])
+
+            # Populate the test dataset
+            for _, row in test_data.iterrows():
+                self.dataset["test"]['text'].append(row['text'])
+                self.dataset["test"]['label'].append(row['label'])
             self.data_loaded = True
 
         def dataset_transform(self):
@@ -62,9 +70,9 @@ def create_pair_classification_task(data_address):
 
         def dataset_transform(self):
             pass
-    return CustomAbsTaskPairClassification()
+    return CustomAbsTaskClassification()
 if __name__ == "__main__":
-    task = create_pair_classification_task('..\\data\\pair_classification\\mimic_Chief_Complaint_vs_Discharge_Diagnosis.csv')
+    task = create_classification_task('..\\data\\clustering\\wiki_broad_medical_topics_dataset.csv')
     mteb = MTEB(tasks=[task])
     # model = get_model("bert-base-uncased")
     # model = get_model("sentence-transformers/all-MiniLM-L6-v2")
