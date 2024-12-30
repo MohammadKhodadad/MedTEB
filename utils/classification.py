@@ -15,9 +15,11 @@ from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer, models
 from sklearn.model_selection import train_test_split
 def create_classification_task(data_address):
+    name='classification_'+data_address.split('/')[-1].replace('.csv','')
+
     class CustomAbsTaskClassification(AbsTaskClassification):
         metadata = TaskMetadata(
-            name="PubMedTitleAbsClassification",
+            name=name,
             dataset={"path": "",
                     "revision": " ",
 

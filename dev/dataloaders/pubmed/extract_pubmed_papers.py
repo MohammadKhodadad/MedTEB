@@ -84,6 +84,8 @@ def pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_cate
                 result['text'].append(text)
                 result['label'].append(category_name)
         result=pd.DataFrame(result)
+        if len(result)>4096:
+            result=result.sample(4096)
         result.to_csv(output_file)
         # with open(output_file, mode='w', encoding='utf-8') as file:
         #     json.dump(all_articles, file, indent=4)
@@ -147,7 +149,10 @@ def pubmed_create_retrieval_dataset(categories, max_doc_per_category=10, output_
 
     # Save retrieval dataset
     if output_file:
-        pd.DataFrame(retrieval_data).to_csv(output_file)
+        result=pd.DataFrame(retrieval_data)
+        if len(result)>4096:
+            result=result.sample(4096)
+        result.to_csv(output_file)
 
 
 
@@ -229,7 +234,11 @@ def pubmed_create_pair_classification_data(categories, max_doc_per_category=10, 
     pairs.extend(neg_pairs)
     # Save pair classification data
     if output_file:
-        pd.DataFrame(pairs).to_csv(output_file)
+        result=pd.DataFrame(pairs)
+        if len(result)>4096:
+            result=result.sample(4096)
+        result.to_csv(output_file)
+        
         # with open(output_file, mode='w', encoding='utf-8') as file:
         #     json.dump(pairs, file, indent=4)
     return pairs

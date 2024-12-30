@@ -15,8 +15,9 @@ from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer, models
 def create_pair_classification_task(data_address):
     class CustomAbsTaskPairClassification(AbsTaskPairClassification):
+        name='pairclassification_'+data_address.split('/')[-1].replace('.csv','')
         metadata = TaskMetadata(
-            name="PubMedTitleAbsPairClassification",
+            name=name,
             dataset={"path": "",
                     "revision": " ",
 

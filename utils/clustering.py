@@ -15,8 +15,9 @@ from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer, models
 def create_clustering_task(data_address):
     class CustomAbsTaskClustering(AbsTaskClustering):
+        name='clustering_'+data_address.split('/')[-1].replace('.csv','')
         metadata = TaskMetadata(
-            name="PubMedTitleAbsClustering",
+            name=name,
             dataset={"path": "",
                     "revision": " ",
 

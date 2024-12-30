@@ -15,8 +15,9 @@ from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer, models
 def create_retrieval_task(data_address):
     class CustomAbsTaskRetrieval(AbsTaskRetrieval):
+        name='retrieval_'+data_address.split('\\')[-1].replace('.csv','')
         metadata = TaskMetadata(
-            name="PubMedTitleAbsRetrieval",
+            name=name,
             dataset={"path": "",
                     "revision": " ",
 

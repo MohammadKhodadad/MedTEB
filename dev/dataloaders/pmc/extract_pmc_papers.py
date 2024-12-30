@@ -77,6 +77,8 @@ def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_categor
                 result['text'].append(text)
                 result['label'].append(category_name)
         result=pd.DataFrame(result)
+        if len(result)>4096:
+            result=result.sample(4096)
         result.to_csv(output_file)
     return all_articles
     print(f"Data saved to {output_file}")

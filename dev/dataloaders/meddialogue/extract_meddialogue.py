@@ -43,6 +43,9 @@ def save_meddialog_dataframe(output_file="../data/meddialog_data.csv"):
     })
 
     # Save the DataFrame to a CSV file
+    
+    if len(df)>4096:
+        df=df.sample(4096)
     df.to_csv(output_file, index=False)
     print(f"MedDialog data saved to {output_file}")
 

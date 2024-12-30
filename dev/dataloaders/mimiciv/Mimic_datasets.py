@@ -13,6 +13,8 @@ def mimic_create_classification_data(data_address='../data/discharge_processed.c
     data['Discharge Diagnosis'] = data['Discharge Diagnosis'].apply(lambda x: x.lower() if isinstance(x, str) else x)
     data['text']= 'Chief Complaint: '+data['Chief Complaint']+ ' History of Present Illness: '+ data['History of Present Illness']
     data['label']=data['Discharge Diagnosis']
+    if len(data)>4096:
+        data=data.sample(4096)
     data[['text','label']].to_csv(output_dir)
     # # Initialize the output structure
     # classification_data = {col: [] for col in cols.keys()}
@@ -79,10 +81,16 @@ def mimic_create_readmission_dataset(data_address='../data/discharge_processed_v
     
     # Filter the data to include only relevant columns
     readmission_data = data[relevant_columns].dropna()
+    c_0= (readmission_data['Readmission']==0).sum()
+    c_1= (readmission_data['Readmission']==0).sum()
+    readmission_data=pd.concat([readmission_data[readmission_data.Readmission==0].sample(min(c_0,c_1)),readmission_data[readmission_data.Readmission==1].sample(min(c_0,c_1))],axis=0)
     readmission_data['text']='Chief Complaint: '+readmission_data['Chief Complaint']+ ' History of Present Illness: '+ readmission_data['History of Present Illness']
     readmission_data['label']=readmission_data['Readmission']
     readmission_data=readmission_data[['text','label']]
+    if len(readmission_data)>4096:
+        readmission_data=readmission_data.sample(4096)
     readmission_data.to_csv(output_dir)
+    
     print(readmission_data.label.value_counts())
     print(f"Data saved to {output_dir}")
     return readmission_data
@@ -103,6 +111,8 @@ def mimic_create_retrieval_dataset(data_address='../data/discharge_processed.csv
     retrieval_data.columns = ['query', 'corpus']
     
     # Save the retrieval dataset to CSV
+    if len(retrieval_data)>4096:
+        retrieval_data=retrieval_data.sample(4096)
     retrieval_data.to_csv(output_dir, index=False)
     
     print(f"Retrieval dataset saved to {output_dir}")
@@ -154,6 +164,8 @@ def mimic_create_pair_classification_dataset(data_address='../data/discharge_pro
     # Convert to a DataFrame
     pair_df = pd.DataFrame(pairs, columns=[f'sentence1', f'sentence2', 'label'])
     # Save to CSV
+    if len(pair_df)>4096:
+        pair_df=pair_df.sample(4096)
     pair_df.to_csv(output_file, index=False)
     print(f"Pair classification dataset saved to {output_file}")
     return pair_df

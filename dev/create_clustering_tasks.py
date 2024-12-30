@@ -2,10 +2,12 @@ import os
 from dataloaders.wikipedia.extract_wikipedia_documents import wiki_fetch_data_from_categories
 from dataloaders.pubmed.extract_pubmed_papers import pubmed_fetch_and_save_articles_by_category
 from dataloaders.pmc.extract_pmc_papers import pmc_fetch_and_save_articles_by_category
-
+import random
 
 from dataloaders.mimiciv.Mimic_datasets import mimic_create_readmission_dataset, mimic_create_classification_data
 
+
+categories_ = ["clustering", "classification"]
 
 
 
@@ -95,12 +97,15 @@ clustering_tasks = {
 # Fetch and save data for each clustering task
 
 for task_name, categories in clustering_tasks.items():
-    output_file = f"../data/clustering/wiki_{task_name.replace(' ', '_').lower()}_dataset.csv"
+    # Randomly select one word
+    cat_ = random.choice(categories_)
+    cat_='clustering'
+    output_file = f"../data/{cat_}/wiki_{task_name.replace(' ', '_').lower()}_dataset.csv"
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
         print(f"\nProcessing task: {task_name}")
-        data = wiki_fetch_data_from_categories(categories, max_pages_per_category=10, output_dir=output_file, max_depth=1)
+        data = wiki_fetch_data_from_categories(categories, max_pages_per_category=1000, output_dir=output_file, max_depth=1)
         for category in data.keys():
             print(category,':',len(data[category]))
 
@@ -136,14 +141,15 @@ tasks = {
 }
 
 for task_name, categories in tasks.items():
-
-    output_file = f"../data/clustering/pubmed_{task_name.replace(' ', '_').lower()}_dataset.csv"
+    cat_ = random.choice(categories_)
+    cat_='clustering'
+    output_file = f"../data/{cat_}/pubmed_{task_name.replace(' ', '_').lower()}_dataset.csv"
 
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
         print(f"Downloading data for task: {task_name}")
-        data = pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=10, output_file=output_file)
+        data = pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=1000, output_file=output_file)
         for category in data.keys():
             print(category,':',len(data[category]))
 
@@ -171,14 +177,15 @@ pmc_tasks = {
 
 
 for task_name, categories in tasks.items():
-
-    output_file = f"../data/clustering/pmc_{task_name.replace(' ', '_').lower()}_dataset.csv"
+    cat_ = random.choice(categories_)
+    cat_='clustering'
+    output_file = f"../data/{cat_}/pmc_{task_name.replace(' ', '_').lower()}_dataset.csv"
 
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
         print(f"Downloading data for task: {task_name}")
-        data = pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=10, output_file=output_file)
+        data = pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=1000, output_file=output_file)
         for category in data.keys():
             print(category,':',len(data[category]))
 
@@ -188,7 +195,9 @@ for task_name, categories in tasks.items():
 # Readmission
 
 for t in [3,7,30]:
-    output_file=f'../data/clustering/mimiciv_readmission_{t}_days.csv'
+    cat_ = random.choice(categories_)
+    cat_='clustering'
+    output_file=f'../data/{cat_}/mimiciv_readmission_{t}_days.csv'
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
@@ -230,7 +239,9 @@ specific_classification_tasks = {
 }
 
 for task_name, categories in specific_classification_tasks.items():
-    output_file=f'../data/clustering/mimiciv_classification_specific_{task_name}.csv'
+    cat_ = random.choice(categories_)
+    cat_='clustering'
+    output_file=f'../data/{cat_}/mimiciv_classification_specific_{task_name}.csv'
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
@@ -261,7 +272,9 @@ general_classification_tasks = {
 
 
 for task_name, categories in general_classification_tasks.items():
-    output_file=f'../data/clustering/mimiciv_classification_general_{task_name}.csv'
+    cat_ = random.choice(categories_)
+    cat_='clustering'
+    output_file=f'../data/{cat_}/mimiciv_classification_general_{task_name}.csv'
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
