@@ -12,10 +12,20 @@ def mimic_create_classification_data(data_address='../data/discharge_processed.c
     # Convert 'Discharge Diagnosis' to lowercase
     data['Discharge Diagnosis'] = data['Discharge Diagnosis'].apply(lambda x: x.lower() if isinstance(x, str) else x)
     data['text']= 'Chief Complaint: '+data['Chief Complaint']+ ' History of Present Illness: '+ data['History of Present Illness']
-    data['label']=data['Discharge Diagnosis']
-    if len(data)>4096:
-        data=data.sample(4096)
-    data[['text','label']].to_csv(output_dir)
+    classification_data={'text':[],'label':[]}
+
+    for class_name, classes in cols.items():
+        class_data = data[data['Discharge Diagnosis'].apply(lambda x: x in [class_.lower() for class_ in classes])]
+        # print(class_data.shape)
+        for _, row in class_data.iterrows():
+            # Create a dictionary of relevant fields
+            classification_data['text'].append(row['text'])
+            classification_data['label'].append(class_name)
+    classification_data=pd.DataFrame(classification_data)
+    classification_data=classification_data.dropna()
+    if len(classification_data)>4096:
+        classification_data=classification_data.sample(4096)
+    classification_data[['text','label']].to_csv(output_dir)
     # # Initialize the output structure
     # classification_data = {col: [] for col in cols.keys()}
     
@@ -82,11 +92,12 @@ def mimic_create_readmission_dataset(data_address='../data/discharge_processed_v
     # Filter the data to include only relevant columns
     readmission_data = data[relevant_columns].dropna()
     c_0= (readmission_data['Readmission']==0).sum()
-    c_1= (readmission_data['Readmission']==0).sum()
+    c_1= (readmission_data['Readmission']==1).sum()
     readmission_data=pd.concat([readmission_data[readmission_data.Readmission==0].sample(min(c_0,c_1)),readmission_data[readmission_data.Readmission==1].sample(min(c_0,c_1))],axis=0)
     readmission_data['text']='Chief Complaint: '+readmission_data['Chief Complaint']+ ' History of Present Illness: '+ readmission_data['History of Present Illness']
     readmission_data['label']=readmission_data['Readmission']
     readmission_data=readmission_data[['text','label']]
+    readmission_data=readmission_data.dropna()
     if len(readmission_data)>4096:
         readmission_data=readmission_data.sample(4096)
     readmission_data.to_csv(output_dir)
@@ -111,6 +122,7 @@ def mimic_create_retrieval_dataset(data_address='../data/discharge_processed.csv
     retrieval_data.columns = ['query', 'corpus']
     
     # Save the retrieval dataset to CSV
+    retrieval_data=retrieval_data.dropna()
     if len(retrieval_data)>4096:
         retrieval_data=retrieval_data.sample(4096)
     retrieval_data.to_csv(output_dir, index=False)
@@ -164,6 +176,7 @@ def mimic_create_pair_classification_dataset(data_address='../data/discharge_pro
     # Convert to a DataFrame
     pair_df = pd.DataFrame(pairs, columns=[f'sentence1', f'sentence2', 'label'])
     # Save to CSV
+    pair_df=pair_df.dropna()
     if len(pair_df)>4096:
         pair_df=pair_df.sample(4096)
     pair_df.to_csv(output_file, index=False)

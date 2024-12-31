@@ -3,7 +3,7 @@ from utils.clustering import create_clustering_task
 from utils.pair_classification import create_pair_classification_task
 from utils.retrieval import create_retrieval_task
 from mteb import MTEB, get_model
-
+from sentence_transformers import SentenceTransformer
 import os
 import glob
 
@@ -17,6 +17,9 @@ model_names = [
     "kamalkraj/BioSimCSE-BioLinkBERT-BASE",
     "malteos/scincl"
 ]
+# model_names = [
+#     "intfloat/e5-base",
+# ]
 # Clustering
 os.chdir('data/clustering')
 addresses=os.listdir('.')
@@ -25,11 +28,16 @@ for address in addresses:
         try:
             task = create_clustering_task(address)
             mteb = MTEB(tasks=[task])
-            for name in model_names:
-                model = get_model(name)
-                results = mteb.run(model)
         except:
             print(f"Error in task: {task}")
+            continue
+        for name in model_names:
+            try:
+                # model = get_model(name)
+                model = SentenceTransformer(name)
+                results = mteb.run(model)
+            except:
+                print(f"Error with model: {name}")
 
 # Classification
 addresses=os.listdir('.')
@@ -38,8 +46,52 @@ for address in addresses:
         try:
             task = create_classification_task(address)
             mteb = MTEB(tasks=[task])
-            for name in model_names:
-                model = get_model(name)
-                results = mteb.run(model)
         except:
             print(f"Error in task: {task}")
+            continue
+        for name in model_names:
+            try:
+                # model = get_model(name)
+                model = SentenceTransformer(name)
+                results = mteb.run(model)
+            except:
+                print(f"Error with model: {name}")
+
+os.chdir('../pair_classification')
+# Pair Classification 
+addresses=os.listdir('.')
+for address in addresses:
+    if '.csv' in address:
+        try:
+            task = create_pair_classification_task(address)
+            mteb = MTEB(tasks=[task])
+        except:
+            print(f"Error in task: {task}")
+            continue
+        for name in model_names:
+            try:
+                # model = get_model(name)
+                model = SentenceTransformer(name)
+                results = mteb.run(model)
+            except:
+                print(f"Error with model: {name}")
+
+os.chdir('../retrieval')
+# Retrieval 
+addresses=os.listdir('.')
+for address in addresses:
+    if '.csv' in address:
+        try:
+            task = create_retrieval_task(address)
+            mteb = MTEB(tasks=[task])
+        except:
+            print(f"Error in task: {task}")
+            continue
+        for name in model_names:
+            try:
+                # model = get_model(name)
+                model = SentenceTransformer(name)
+                results = mteb.run(model)
+            except:
+                print(f"Error with model: {name}")
+        

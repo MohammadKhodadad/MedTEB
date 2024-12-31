@@ -47,7 +47,7 @@ def create_clustering_task(data_address):
             if self.data_loaded:
                 return
             data = pd.read_csv(data_address)
-            
+            data=data.dropna()
             self.dataset = {
                 "test": [{'sentences':[],'labels':[]}]}
             for i in range(len(data)):

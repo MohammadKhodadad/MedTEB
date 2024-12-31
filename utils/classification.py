@@ -49,6 +49,7 @@ def create_classification_task(data_address):
             if self.data_loaded:
                 return
             data = pd.read_csv(data_address)
+            data=data.dropna()
             
             self.dataset = {
                 "test": {'text':[],'label':[]},
