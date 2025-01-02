@@ -2,10 +2,9 @@ from utils.classification import create_classification_task
 from utils.clustering import create_clustering_task
 from utils.pair_classification import create_pair_classification_task
 from utils.retrieval import create_retrieval_task
-from mteb import MTEB, get_model
+from mteb import MTEB
 from sentence_transformers import SentenceTransformer
 import os
-import glob
 
 model_names = [
     "bert-base-uncased",

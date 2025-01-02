@@ -1,18 +1,10 @@
 from __future__ import annotations
 from typing import Any
-import datasets
-import json
 import pandas as pd
-from datasets import Dataset
-from datasets import Dataset, DatasetDict
 from mteb.abstasks.AbsTaskPairClassification import AbsTaskPairClassification
 from mteb.abstasks.TaskMetadata import TaskMetadata
-from transformers import BertTokenizer, BertForSequenceClassification
-import torch
 import pandas as pd
 from mteb import MTEB, get_model
-from transformers import AutoTokenizer, AutoModel
-from sentence_transformers import SentenceTransformer, models
 def create_pair_classification_task(data_address):
     class CustomAbsTaskPairClassification(AbsTaskPairClassification):
         name='pairclassification_'+data_address.split('/')[-1].replace('.csv','')
