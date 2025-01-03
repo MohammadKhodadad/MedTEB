@@ -13,56 +13,56 @@ categories_ = ["clustering", "classification"]
 
 print("WIKI TASKS...")
 clustering_tasks = {
-    "Disease by System": [
-        "Cardiovascular diseases",
-        "Respiratory diseases",
-        "Neurological disorders",
-        "Musculoskeletal disorders",
-        "Digestive diseases"
-    ],
-    # "Cardiovascular vs Respiratory": [
+    # "Disease by System": [
     #     "Cardiovascular diseases",
-    #     "Respiratory diseases"
-    # ],
-    # "Cardiovascular vs Digestive": [
-    #     "Cardiovascular diseases",
+    #     "Respiratory diseases",
+    #     "Neurological disorders",
+    #     "Musculoskeletal disorders",
     #     "Digestive diseases"
     # ],
-    # "Syndromes and Symptoms": [ # Add signs
-    #     "Syndromes",
-    #     "Symptoms"
-    # ],
+    "Cardiovascular vs Respiratory": [
+        "Cardiovascular diseases",
+        "Respiratory diseases"
+    ],
+    "Cardiovascular vs Digestive": [
+        "Cardiovascular diseases",
+        "Digestive diseases"
+    ],
+    "Syndromes and Symptoms": [ # Add signs
+        "Syndromes",
+        "Symptoms"
+    ],
     "Syndromes":[
         "Syndromes affecting the eye",
         "Syndromes affecting blood",
         "Syndromes affecting the nervous system",
         "Syndromes affecting hearing"
     ],
-    # "Pain vs Fever":[
-    #     "Pain",
-    #     "Fever",
-    # ],
-    # "Infection vs Cancer":[
-    #     "Infectious diseases",
-    #     "Cancer"
-    # ],
-    # "Viral vs Bacterial":[
-    #     "Viral diseases",
-    #     "Bacterial diseases",
-    # ],
-    "Broad Medical Topics": [
-        "Diseases and disorders",
-        "Therapy",
-        "Symptoms",
-        "Pathology"
+    "Pain vs Fever":[
+        "Pain",
+        "Fever",
     ],
-    # "Core Medical Specialties": [
-    #     "Cardiology",
-    #     "Neurology",
-    #     "Gastroenterology",
-    #     "Endocrinology",
-    #     "Pulmonology"
+    "Infection vs Cancer":[
+        "Infectious diseases",
+        "Cancer"
+    ],
+    "Viral vs Bacterial":[
+        "Viral diseases",
+        "Bacterial diseases",
+    ],
+    # "Broad Medical Topics": [
+    #     "Diseases and disorders",
+    #     "Therapy",
+    #     "Symptoms",
+    #     "Pathology"
     # ],
+    "Core Medical Specialties": [
+        "Cardiology",
+        "Neurology",
+        "Gastroenterology",
+        "Endocrinology",
+        "Pulmonology"
+    ],
     "Surgical Specialties": [
         "Orthopedics",
         "Ophthalmology",
@@ -77,20 +77,20 @@ clustering_tasks = {
         "Anesthesiology",
         "Intensive care medicine"
     ],
-    "Preventive and Community Health": [
-        "Public health",
-        "Preventive medicine",
-        "Occupational medicine",
-        "Sports medicine",
-        "Tropical medicine"
-    ],
-    "Special Populations and Focused Fields": [
-        "Pediatrics",
-        "Geriatrics",
-        "Men's health",
-        "Women's health",
-        "Addiction medicine"
-    ]
+    # "Preventive and Community Health": [
+    #     "Public health",
+    #     "Preventive medicine",
+    #     "Occupational medicine",
+    #     "Sports medicine",
+    #     "Tropical medicine"
+    # ],
+    # "Special Populations and Focused Fields": [
+    #     "Pediatrics",
+    #     "Geriatrics",
+    #     "Men's health",
+    #     "Women's health",
+    #     "Addiction medicine"
+    # ]
 }
 
 
@@ -99,13 +99,13 @@ clustering_tasks = {
 for task_name, categories in clustering_tasks.items():
     # Randomly select one word
     cat_ = random.choice(categories_)
-    cat_='clustering'
+    cat_='classification'
     output_file = f"../data/{cat_}/wiki_{task_name.replace(' ', '_').lower()}_dataset.csv"
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
         print(f"\nProcessing task: {task_name}")
-        data = wiki_fetch_data_from_categories(categories, max_pages_per_category=1000, output_dir=output_file, max_depth=1)
+        data = wiki_fetch_data_from_categories(categories, max_pages_per_category=2000, output_dir=output_file, max_depth=1)
         for category in data.keys():
             print(category,':',len(data[category]))
 
@@ -122,10 +122,10 @@ tasks = {
         "Alzheimer's disease": "alzheimer's disease",
         "Influenza": "influenza"
     },
-    # "Treatment_Prevention": {
-    #     "Treatment": "treatment",
-    #     "Prevention": "prevention"
-    # },
+    "Treatment_Prevention": {
+        "Treatment": "treatment",
+        "Prevention": "prevention"
+    },
     "Chronic_Infectious_Genetic_Autoimmune": {
         "Chronic diseases": "chronic disease",
         "Infectious diseases": "infectious disease",
@@ -142,14 +142,14 @@ tasks = {
 
 for task_name, categories in tasks.items():
     cat_ = random.choice(categories_)
-    cat_='clustering'
+    cat_='classification'
     output_file = f"../data/{cat_}/pubmed_{task_name.replace(' ', '_').lower()}_dataset.csv"
 
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
         print(f"Downloading data for task: {task_name}")
-        data = pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=1000, output_file=output_file)
+        data = pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=2000, output_file=output_file)
         for category in data.keys():
             print(category,':',len(data[category]))
 
@@ -162,10 +162,10 @@ pmc_tasks = {
         "X-ray": "X-ray",
         "PET scan": "PET scan"
     },
-    # "Diagnostic_vs_Therapeutic": {
-    #     "Diagnostic": "diagnostic",
-    #     "Therapeutic": "therapeutic"
-    # },
+    "Diagnostic_vs_Therapeutic": {
+        "Diagnostic": "diagnostic",
+        "Therapeutic": "therapeutic"
+    },
     "Types_of_Interventions": {
         "Drug-based": "drug-based",
         "Device-based": "device-based",
@@ -178,14 +178,14 @@ pmc_tasks = {
 
 for task_name, categories in pmc_tasks.items():
     cat_ = random.choice(categories_)
-    cat_='clustering'
+    cat_='classification'
     output_file = f"../data/{cat_}/pmc_{task_name.replace(' ', '_').lower()}_dataset.csv"
 
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
     else:
         print(f"Downloading data for task: {task_name}")
-        data = pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=1000, output_file=output_file)
+        data = pmc_fetch_and_save_articles_by_category(categories, max_articles_per_category=2000, output_file=output_file)
         for category in data.keys():
             print(category,':',len(data[category]))
 
@@ -196,7 +196,7 @@ for task_name, categories in pmc_tasks.items():
 
 for t in [3,7,30]:
     cat_ = random.choice(categories_)
-    cat_='clustering'
+    cat_='classification'
     output_file=f'../data/{cat_}/mimiciv_readmission_{t}_days.csv'
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
@@ -219,19 +219,19 @@ specific_classification_tasks = {
         "Inflammatory": ["Acute appendicitis", "Acute cholecystitis", "Diverticulitis", "Pancreatitis"],
         "Pain": ["Abdominal pain", "Chest pain"]
     },
-    # "Musculoskeletal_Disorders": {
-    #     "Osteoarthritis": ["Right knee osteoarthritis", "Left knee osteoarthritis", "Right hip osteoarthritis", "Left hip osteoarthritis"],
-    #     "Stenosis": ["Lumbar stenosis", "Cervical stenosis"]
-    # },
-    # "Neurological_Conditions": {
-    #     "Seizure_Disorders": ["Epilepsy", "Seizure", "Seizures"],
-    #     "Critical_Neurology": ["Acute ischemic stroke", "CNS lymphoma", "Syncope"]
-    # },
-    "Cancer_Types": {
-        "Breast_Cancer": ["Right breast cancer"],
-        "Prostate_Cancer": ["PROSTATE CANCER"],
-        "Other": ["AML", "Peripheral Arterial Disease"]
+    "Musculoskeletal_Disorders": {
+        "Osteoarthritis": ["Right knee osteoarthritis", "Left knee osteoarthritis", "Right hip osteoarthritis", "Left hip osteoarthritis"],
+        "Stenosis": ["Lumbar stenosis", "Cervical stenosis"]
     },
+    "Neurological_Conditions": {
+        "Seizure_Disorders": ["Epilepsy", "Seizure", "Seizures"],
+        "Critical_Neurology": ["Acute ischemic stroke", "CNS lymphoma", "Syncope"]
+    },
+    # "Cancer_Types": {
+    #     "Breast_Cancer": ["Right breast cancer"],
+    #     "Prostate_Cancer": ["PROSTATE CANCER"],
+    #     "Other": ["AML", "Peripheral Arterial Disease"]
+    # },
     # "Mortality_and_Risk_Factors": {
     #     "Deceased_Status": ["Deceased", "Expired", "Patient expired"],
     #     "Obesity": ["Morbid obesity"]
@@ -240,7 +240,7 @@ specific_classification_tasks = {
 
 for task_name, categories in specific_classification_tasks.items():
     cat_ = random.choice(categories_)
-    cat_='clustering'
+    cat_='classification'
     output_file=f'../data/{cat_}/mimiciv_specific_{task_name}.csv'
     if os.path.exists(output_file):
         print(f"{output_file} already exists")
@@ -273,7 +273,7 @@ general_classification_tasks = {
 
 for task_name, categories in general_classification_tasks.items():
     cat_ = random.choice(categories_)
-    cat_='clustering'
+    cat_='classification'
     output_file=f'../data/{cat_}/mimiciv_general_{task_name}.csv'
     if os.path.exists(output_file):
         print(f"{output_file} already exists")

@@ -85,8 +85,8 @@ def pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_cate
                 result['label'].append(category_name)
         result=pd.DataFrame(result)
         result=result.dropna()
-        if len(result)>4096:
-            result=result.sample(4096)
+        if len(result)>8192:
+            result=result.sample(8192)
         result.to_csv(output_file)
         # with open(output_file, mode='w', encoding='utf-8') as file:
         #     json.dump(all_articles, file, indent=4)
@@ -152,8 +152,8 @@ def pubmed_create_retrieval_dataset(categories, max_doc_per_category=10, output_
     if output_file:
         result=pd.DataFrame(retrieval_data)
         result=result.dropna()
-        if len(result)>4096:
-            result=result.sample(4096)
+        if len(result)>8192:
+            result=result.sample(8192)
         result.to_csv(output_file)
 
 

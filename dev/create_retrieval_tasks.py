@@ -10,7 +10,7 @@ if os.path.exists(output_file):
     print(f"{output_file} already exists")
 else:
     print(f"Downloading data for task: Diseases and disorders by system")
-    wiki_create_retrieval_dataset(["Diseases and disorders by system"],10,max_depth=1,output_file=output_file)
+    wiki_create_retrieval_dataset(["Diseases and disorders by system"],3000,max_depth=1,output_file=output_file)
 
 
 
@@ -50,6 +50,6 @@ if os.path.exists(output_file):
     print(f"{output_file} already exists")
 else:
     print(f"Loading Data for task: pubmed pairclassification")
-    pubmed_create_retrieval_dataset(tasks,10,output_file)
+    pubmed_create_retrieval_dataset(tasks,3000,output_file)
 
 

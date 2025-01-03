@@ -61,8 +61,8 @@ def process_dataset(file_path, output_file="../data/mts_dialogue_question_answer
     # Save the DataFrame to a CSV file
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     qa_df=qa_df.dropna()
-    if len(qa_df)>4096:
-        qa_df=qa_df.sample(4096)
+    if len(qa_df)>8192:
+        qa_df=qa_df.sample(8192)
     qa_df.to_csv(output_file, index=False)
     
     print(f"Question and answer pairs saved to {output_file}")

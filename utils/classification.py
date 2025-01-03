@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Any
 import pandas as pd
+import os
 from mteb.abstasks.AbsTaskClassification import AbsTaskClassification
 from mteb.abstasks.TaskMetadata import TaskMetadata
 import pandas as pd
@@ -40,7 +41,11 @@ def create_classification_task(data_address):
             """Load dataset from HuggingFace hub or use sample data"""
             if self.data_loaded:
                 return
+            # print(data_address)
+            # print(os.getcwd())
+            # print(os.listdir())
             data = pd.read_csv(data_address)
+            data['label_numerical'], unique_labels = pd.factorize(data['label'])
             data=data.dropna()
             
             self.dataset = {
@@ -51,12 +56,12 @@ def create_classification_task(data_address):
             # Populate the train dataset
             for _, row in train_data.iterrows():
                 self.dataset["train"]['text'].append(row['text'])
-                self.dataset["train"]['label'].append(row['label'])
+                self.dataset["train"]['label'].append(row['label_numerical'])
 
             # Populate the test dataset
             for _, row in test_data.iterrows():
                 self.dataset["test"]['text'].append(row['text'])
-                self.dataset["test"]['label'].append(row['label'])
+                self.dataset["test"]['label'].append(row['label_numerical'])
             self.data_loaded = True
 
         def dataset_transform(self):

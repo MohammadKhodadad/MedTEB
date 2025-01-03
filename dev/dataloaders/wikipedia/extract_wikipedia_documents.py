@@ -112,8 +112,8 @@ def wiki_fetch_data_from_categories(categories, max_pages_per_category=50,max_de
     all_documents=pd.DataFrame(all_documents)
     result=pd.DataFrame(all_documents)
     result=result.dropna()
-    if len(result)>4096:
-        result=result.sample(4096)
+    if len(result)>8192:
+        result=result.sample(8192)
     result.to_csv(output_dir)
     
     return all_documents
@@ -175,8 +175,8 @@ def wiki_create_retrieval_dataset(categories, max_pages_per_category=50, max_dep
     # save_data_as_json(retrieval_data, output_file)
     result=pd.DataFrame(retrieval_data)
     result=result.dropna()
-    if len(result)>4096:
-        result=result.sample(4096)
+    if len(result)>8192:
+        result=result.sample(8192)
     result.to_csv(output_file)
 
 
@@ -253,8 +253,8 @@ def wiki_create_pair_classification_data(categories, max_pages_per_category=50, 
     # save_data_as_json(pairs, output_file)
     result=pd.DataFrame(pairs)
     result=result.dropna()
-    if len(result)>4096:
-        result=result.sample(4096)
+    if len(result)>8192:
+        result=result.sample(8192)
     result.to_csv(output_file)
 
     return pairs

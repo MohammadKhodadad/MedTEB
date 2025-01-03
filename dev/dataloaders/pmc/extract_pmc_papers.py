@@ -3,7 +3,7 @@ import re
 from Bio import Entrez
 from Bio.Entrez import efetch, read
 import pandas as pd
-
+# WE CAN ALSO DOWNLOAD FULL PAPER TEXT
 # Register your email
 Entrez.email = "your@email.com"
 
@@ -78,8 +78,8 @@ def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_categor
                 result['label'].append(category_name)
         result=pd.DataFrame(result)
         result=result.dropna()
-        if len(result)>4096:
-            result=result.sample(4096)
+        if len(result)>8192:
+            result=result.sample(8192)
         result.to_csv(output_file)
     return all_articles
     print(f"Data saved to {output_file}")

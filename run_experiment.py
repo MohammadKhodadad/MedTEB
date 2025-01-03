@@ -39,7 +39,17 @@ for address in addresses:
                 print(f"Error with model: {name}")
 
 # Classification
+
+os.chdir('../classification')
 addresses=os.listdir('.')
+# for address in addresses:
+#     if '.csv' in address:
+#         task = create_classification_task(address)
+#         mteb = MTEB(tasks=[task])
+#         for name in model_names:
+#             # model = get_model(name)
+#             model = SentenceTransformer(name)
+#             results = mteb.run(model)
 for address in addresses:
     if '.csv' in address:
         try:
@@ -70,7 +80,7 @@ for address in addresses:
         for name in model_names:
             try:
                 # model = get_model(name)
-                model = SentenceTransformer(name)
+                model = SentenceTransformer(name,trust_remote_code=True)
                 results = mteb.run(model)
             except:
                 print(f"Error with model: {name}")

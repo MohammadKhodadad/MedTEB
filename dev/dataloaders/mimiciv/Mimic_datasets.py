@@ -23,8 +23,8 @@ def mimic_create_classification_data(data_address='../data/discharge_processed.c
             classification_data['label'].append(class_name)
     classification_data=pd.DataFrame(classification_data)
     classification_data=classification_data.dropna()
-    if len(classification_data)>4096:
-        classification_data=classification_data.sample(4096)
+    if len(classification_data)>8192:
+        classification_data=classification_data.sample(8192)
     classification_data[['text','label']].to_csv(output_dir)
     # # Initialize the output structure
     # classification_data = {col: [] for col in cols.keys()}
@@ -98,8 +98,8 @@ def mimic_create_readmission_dataset(data_address='../data/discharge_processed_v
     readmission_data['label']=readmission_data['Readmission']
     readmission_data=readmission_data[['text','label']]
     readmission_data=readmission_data.dropna()
-    if len(readmission_data)>4096:
-        readmission_data=readmission_data.sample(4096)
+    if len(readmission_data)>8192:
+        readmission_data=readmission_data.sample(8192)
     readmission_data.to_csv(output_dir)
     
     print(readmission_data.label.value_counts())
@@ -123,8 +123,8 @@ def mimic_create_retrieval_dataset(data_address='../data/discharge_processed.csv
     
     # Save the retrieval dataset to CSV
     retrieval_data=retrieval_data.dropna()
-    if len(retrieval_data)>4096:
-        retrieval_data=retrieval_data.sample(4096)
+    if len(retrieval_data)>8192:
+        retrieval_data=retrieval_data.sample(8192)
     retrieval_data.to_csv(output_dir, index=False)
     
     print(f"Retrieval dataset saved to {output_dir}")
@@ -177,8 +177,8 @@ def mimic_create_pair_classification_dataset(data_address='../data/discharge_pro
     pair_df = pd.DataFrame(pairs, columns=[f'sentence1', f'sentence2', 'label'])
     # Save to CSV
     pair_df=pair_df.dropna()
-    if len(pair_df)>4096:
-        pair_df=pair_df.sample(4096)
+    if len(pair_df)>8192:
+        pair_df=pair_df.sample(8192)
     pair_df.to_csv(output_file, index=False)
     print(f"Pair classification dataset saved to {output_file}")
     return pair_df
