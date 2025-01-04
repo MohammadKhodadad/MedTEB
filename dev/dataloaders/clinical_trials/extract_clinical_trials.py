@@ -191,9 +191,43 @@ def clinical_trials_create_retrieval_dataset(col1='officialTitle',col2='detailed
                     "source_title": title
                 })
 
+def clinical_trials_pair_classification_dataset(col1='officialTitle',col2='detailedDescription',page_size=2,max_pages=2, output_file="../data/clinical_trials_pair_classification_dataset.json"):
+    """
+    Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
+    """
+    pairs = []
+    clinical_trials_df = fetch_all_studies_with_pagination(base_api_url, page_size=page_size,max_pages=max_pages)
+
+    for index, row in tqdm.tqdm(clinical_trials_df.iterrows()):
+        title=row[col1]
+        corpus=row[col2]
+        if len(title) & len(corpus):
+            new_corpus = clinical_trials_anonymize_corpus(title, corpus).get('corpus','')
+
+            if new_corpus:
+                pairs.append({
+                    "sentence1": title,
+                    "sentence2": new_corpus,
+                    'label': 1
+                })
+
+    neg_pairs=[]
+    for idx, pair in enumerate(pairs):
+        if pair["label"] == 1:  # Only process positive pairs
+            # Get a random sentence2 from other pairs
+            unrelated_sentence2 = random.choice(
+                [p["sentence2"] for i, p in enumerate(pairs) if p["label"] == 1 and i != idx]
+            )
+            # Append as a negative pair
+            neg_pairs.append({
+                "sentence1": pair["sentence1"],
+                "sentence2": unrelated_sentence2,
+                "label": 0  # Negative pair
+            })
+
     # Save retrieval dataset
     if output_file:
-        result=pd.DataFrame(retrieval_data)
+        result=pd.DataFrame(pairs)
         result=result.dropna()
         if len(result)>8192:
             result=result.sample(8192)
@@ -204,3 +238,4 @@ if __name__ == "__main__":
     base_api_url = "https://www.clinicaltrials.gov/api/v2/studies"
     # Fetch all study data
     clinical_trials_df = clinical_trials_create_retrieval_dataset()
+    clinical_trials_df = clinical_trials_pair_classification_dataset()
