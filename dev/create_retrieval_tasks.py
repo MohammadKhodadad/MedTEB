@@ -4,6 +4,7 @@ from dataloaders.wikipedia.extract_wikipedia_documents import wiki_create_retrie
 from dataloaders.mimiciv.Mimic_datasets import mimic_create_retrieval_dataset
 from dataloaders.medmcqa.extract_medmcqa_dataset import medmc_qa_create_retrieval_dataset
 from dataloaders.pubmed.extract_pubmed_papers import pubmed_create_retrieval_dataset
+from dataloaders.clinical_trials import clinical_trials_create_retrieval_dataset
 
 output_file=f"../data/retrieval/wiki_diseases_dataset.csv"
 if os.path.exists(output_file):
@@ -51,5 +52,16 @@ if os.path.exists(output_file):
 else:
     print(f"Loading Data for task: pubmed pairclassification")
     pubmed_create_retrieval_dataset(tasks,3000,output_file)
+
+
+
+
+
+output_file=f"../data/retrieval/clinical_trials_retrieval.csv"
+if os.path.exists(output_file):
+    print(f"{output_file} already exists")
+else:
+    print(f"Loading Data for task: clinical_trials retrieval")
+    clinical_trials_create_retrieval_dataset(tasks,page_size=1000,max_pages=5,output_file=output_file)
 
 
