@@ -14,7 +14,8 @@ model_names = [
     "nomic-ai/nomic-embed-text-v1",
     "emilyalsentzer/Bio_ClinicalBERT",
     "kamalkraj/BioSimCSE-BioLinkBERT-BASE",
-    "malteos/scincl"
+    "malteos/scincl",
+    "skyfury/CTMEDBERT_CLS_Encoder"
 ]
 # model_names = [
 #     "intfloat/e5-base",

@@ -9,7 +9,7 @@ import os
 
 
 # Step 1: Load the transformer model
-model_name = "your-username/CTMEDBERT-step60000"
+model_name = "skyfury/CTMEDBERT-cl-step_45000"
 transformer = models.Transformer(model_name)
 name='CTMEDBERT'
 # Step 2: Define a pooling layer that uses the CLS token

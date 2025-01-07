@@ -5,6 +5,7 @@ import pandas as pd
 
 def load_json_files():
     base_dirs = [
+        'data/classification/results',
         'data/clustering/results',
         'data/pair_classification/results',
         'data/retrieval/results'

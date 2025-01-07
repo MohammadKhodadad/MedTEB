@@ -192,17 +192,17 @@ for task_name, categories in pmc_tasks.items():
 
 
 
-# Readmission
+# # Readmission
 
-for t in [3,7,30]:
-    cat_ = random.choice(categories_)
-    cat_='clustering'
-    output_file=f'../data/{cat_}/mimiciv_readmission_{t}_days.csv'
-    if os.path.exists(output_file):
-        print(f"{output_file} already exists")
-    else:
-        mimic_create_readmission_dataset(data_address='./dataloaders/data/discharge_processed_v_3.csv',
-                                   readmission_days=t,output_dir=output_file)
+# for t in [3,7,30]:
+#     cat_ = random.choice(categories_)
+#     cat_='clustering'
+#     output_file=f'../data/{cat_}/mimiciv_readmission_{t}_days.csv'
+#     if os.path.exists(output_file):
+#         print(f"{output_file} already exists")
+#     else:
+#         mimic_create_readmission_dataset(data_address='./dataloaders/data/discharge_processed_v_3.csv',
+#                                    readmission_days=t,output_dir=output_file)
         
 
 
