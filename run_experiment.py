@@ -34,7 +34,7 @@ for address in addresses:
         for name in model_names:
             try:
                 # model = get_model(name)
-                model = SentenceTransformer(name)
+                model = SentenceTransformer(name,trust_remote_code=True)
                 results = mteb.run(model)
             except:
                 print(f"Error with model: {name}")
@@ -62,7 +62,7 @@ for address in addresses:
         for name in model_names:
             try:
                 # model = get_model(name)
-                model = SentenceTransformer(name)
+                model = SentenceTransformer(name,trust_remote_code=True)
                 results = mteb.run(model)
             except:
                 print(f"Error with model: {name}")
@@ -100,7 +100,7 @@ for address in addresses:
         for name in model_names:
             try:
                 # model = get_model(name)
-                model = SentenceTransformer(name)
+                model = SentenceTransformer(name,trust_remote_code=True)
                 results = mteb.run(model)
             except:
                 print(f"Error with model: {name}")
