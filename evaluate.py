@@ -88,3 +88,7 @@ print(f"Loaded {len(df)} JSON files containing relevant data.")
 for col in df.columns:
     print(f'Number of values in column {col}: ',len(df[col].unique()))
 print(df['task_name'].unique())
+
+for task_name in df.task_name.unique():
+    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDBERT_CLS_Encoder2")]["metric"].item()}\n')
+print(df.task_type.value_counts())

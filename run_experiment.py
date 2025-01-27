@@ -15,7 +15,8 @@ model_names = [
     "emilyalsentzer/Bio_ClinicalBERT",
     "kamalkraj/BioSimCSE-BioLinkBERT-BASE",
     "malteos/scincl",
-    "skyfury/CTMEDBERT_CLS_Encoder"
+    "skyfury/CTMEDBERT_CLS_Encoder",
+    "skyfury/CTMEDBERT_CLS_Encoder2",
 ]
 # model_names = [
 #     "intfloat/e5-base",

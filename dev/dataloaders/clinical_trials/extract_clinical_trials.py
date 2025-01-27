@@ -171,7 +171,7 @@ def clinical_trials_anonymize_corpus(title,corpus):
         return {"corpus": None}
 
 
-def clinical_trials_create_retrieval_dataset(col1='officialTitle',col2='detailedDescription',page_size=2,max_pages=2, output_file="../data/clinical_trials_retrieval_dataset.json"):
+def clinical_trials_create_retrieval_dataset(base_api_url = "https://www.clinicaltrials.gov/api/v2/studies", col1='officialTitle',col2='detailedDescription',page_size=5,max_pages=1000, output_file="../data/clinical_trials_retrieval_dataset.json"):
     """
     Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
     """
@@ -181,8 +181,16 @@ def clinical_trials_create_retrieval_dataset(col1='officialTitle',col2='detailed
     for index, row in tqdm.tqdm(clinical_trials_df.iterrows()):
         title=row[col1]
         corpus=row[col2]
+        if col2=='primaryOutcomes':
+            # corpus=eval(corpus)
+            if isinstance(corpus,list):
+                corpus='\n'.join([' '.join([f'{key}: {item[key]}' for key in item.keys() if key!='timeFrame']) for item in corpus])
+            else:
+                continue
+            
         if len(title) & len(corpus):
-            new_corpus = clinical_trials_anonymize_corpus( title, corpus).get('corpus','')
+            new_corpus = corpus
+            # new_corpus = clinical_trials_anonymize_corpus( title, corpus).get('corpus','')
 
             if new_corpus:
                 retrieval_data.append({
@@ -190,8 +198,15 @@ def clinical_trials_create_retrieval_dataset(col1='officialTitle',col2='detailed
                     "corpus": new_corpus,
                     "source_title": title
                 })
+    if output_file:
+        result=pd.DataFrame(retrieval_data)
+        result=result.dropna()
+        if len(result)>8192:
+            result=result.sample(8192)
+        result.to_csv(output_file)
+    return result
 
-def clinical_trials_pair_classification_dataset(col1='officialTitle',col2='detailedDescription',page_size=2,max_pages=2, output_file="../data/clinical_trials_pair_classification_dataset.json"):
+def clinical_trials_pair_classification_dataset(base_api_url = "https://www.clinicaltrials.gov/api/v2/studies", col1='officialTitle',col2='detailedDescription',page_size=5,max_pages=1000, output_file="../data/clinical_trials_pair_classification_dataset.json"):
     """
     Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
     """
@@ -201,8 +216,15 @@ def clinical_trials_pair_classification_dataset(col1='officialTitle',col2='detai
     for index, row in tqdm.tqdm(clinical_trials_df.iterrows()):
         title=row[col1]
         corpus=row[col2]
+        if col2=='primaryOutcomes':
+            # corpus=eval(corpus)
+            if isinstance(corpus,list):
+                corpus='\n'.join([' '.join([f'{key}: {item[key]}' for key in item.keys() if key!='timeFrame']) for item in corpus])
+            else:
+                continue
         if len(title) & len(corpus):
-            new_corpus = clinical_trials_anonymize_corpus(title, corpus).get('corpus','')
+            new_corpus = corpus
+            # new_corpus = clinical_trials_anonymize_corpus(title, corpus).get('corpus','')
 
             if new_corpus:
                 pairs.append({
@@ -235,7 +257,6 @@ def clinical_trials_pair_classification_dataset(col1='officialTitle',col2='detai
     return result
 # Example usage
 if __name__ == "__main__":
-    base_api_url = "https://www.clinicaltrials.gov/api/v2/studies"
     # Fetch all study data
-    clinical_trials_df = clinical_trials_create_retrieval_dataset()
-    clinical_trials_df = clinical_trials_pair_classification_dataset()
+    clinical_trials_df = clinical_trials_create_retrieval_dataset(col2='primaryOutcomes',page_size=2,max_pages=2)
+    clinical_trials_df = clinical_trials_pair_classification_dataset(col2='primaryOutcomes',page_size=2,max_pages=2)

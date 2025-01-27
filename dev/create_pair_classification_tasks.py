@@ -5,7 +5,7 @@ from dataloaders.mimiciv.Mimic_datasets import mimic_create_pair_classification_
 from dataloaders.medmcqa.extract_medmcqa_dataset import medmc_qa_create_pair_classification_data
 from dataloaders.medqa.extract_medqa import create_medqa_pair_classification
 from dataloaders.pubmed.extract_pubmed_papers import pubmed_create_pair_classification_data
-from dataloaders.clinical_trials import clinical_trials_pair_classification_dataset
+from dataloaders.clinical_trials.extract_clinical_trials import clinical_trials_pair_classification_dataset
 
 output_file=f"../data/pair_classification/wiki_diseases_dataset.csv"
 if os.path.exists(output_file):
@@ -62,11 +62,14 @@ else:
     pubmed_create_pair_classification_data(tasks,3000,output_file)
 
 
-output_file=f"../data/pair_classification/clinical_trials_pair_classification.csv"
-if os.path.exists(output_file):
-    print(f"{output_file} already exists")
-else:
-    print(f"Loading Data for task: clinical_trials pairclassification")
-    clinical_trials_pair_classification_dataset(tasks,page_size=1000,max_pages=5,output_file=output_file)
+cols2=['detailedDescription','primaryOutcomes']
+for col2 in cols2:
+    col1='officialTitle'
+    output_file=f"../data/pair_classification/clinical_trials_{col1}_vs{col2}.csv"
+    if os.path.exists(output_file):
+        print(f"{output_file} already exists")
+    else:
+        print(f"Loading Data for task: clinical_trials retrieval")
+        clinical_trials_pair_classification_dataset(col1=col1,col2=col2,page_size=1000,max_pages=5,output_file=output_file)
 
 
