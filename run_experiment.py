@@ -17,6 +17,8 @@ model_names = [
     "malteos/scincl",
     "skyfury/CTMEDBERT_CLS_Encoder",
     "skyfury/CTMEDBERT_CLS_Encoder2",
+    "skyfury/CTMEDBERT_CLS_Encoder3",
+    # "skyfury/CTMEDBERT_CLS_Encoder4",
 ]
 # model_names = [
 #     "intfloat/e5-base",

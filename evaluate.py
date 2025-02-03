@@ -3,6 +3,24 @@ import json
 import glob
 import pandas as pd
 
+
+removed_tasks = """classification_pmc_diagnostic_vs_therapeutic_dataset
+classification_pubmed_chronic_infectious_genetic_autoimmune_dataset
+classification_pubmed_treatment_prevention_dataset
+classification_pubmed_inflammation_signaling_metabolism_immunity_dataset
+classification_pmc_medical_imaging_types_dataset
+classification_pmc_types_of_interventions_dataset
+clustering_wiki_broad_medical_topics_dataset
+clustering_mimiciv_general_Neurological_vs_Musculoskeletal_Conditions
+clustering_pmc_types_of_interventions_dataset
+clustering_pubmed_inflammation_signaling_metabolism_immunity_dataset
+clustering_pmc_medical_imaging_types_dataset
+clustering_mimiciv_general_Abdominal_vs_Thoracic_Conditions
+pairclassification_medmcqa_pair_classification
+pairclassification_medqa_pair_classification
+pairclassification_clinical_trials_officialTitle_vsdetailedDescription
+pairclassification_clinical_trials_officialTitle_vsprimaryOutcomes
+retrieval_wiki_diseases_dataset""".split('\n')
 def load_json_files():
     base_dirs = [
         'data/classification/results',
@@ -35,6 +53,8 @@ def read_results(data):
     rows=[]
     for item in data:
         task_name = item.get("task_name", "")
+        if task_name in removed_tasks:
+            continue
         model_name = item.get("model_name", "")
         scores = item.get("scores", {})
         test_scores = scores.get("test", [])
@@ -45,10 +65,10 @@ def read_results(data):
             if "clustering" in task_name:
                 metric = test_scores.get("v_measure")
                 task_type = "clustering"
-            elif "classification" in task_name and "pair_classification" not in task_name:
+            elif "classification" in task_name and not ("pair_classification"  in task_name or "pairclassification" in task_name):
                 metric = test_scores.get("f1")
                 task_type = "classification"
-            elif "pair_classification" in task_name:
+            elif ("pair_classification" in task_name) or ("pairclassification" in task_name):
                 metric = test_scores.get("similarity_f1")
                 task_type = "pair_classification"
             elif "retrieval" in task_name:
@@ -90,5 +110,5 @@ for col in df.columns:
 print(df['task_name'].unique())
 
 for task_name in df.task_name.unique():
-    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDBERT_CLS_Encoder2")]["metric"].item()}\n')
+    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDBERT_CLS_Encoder3")]["metric"].item()}\n')
 print(df.task_type.value_counts())
