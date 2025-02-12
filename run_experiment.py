@@ -8,6 +8,7 @@ import os
 
 model_names = [
     "bert-base-uncased",
+    "BASF-AI/chem-embed-text-v1",
     "sentence-transformers/all-MiniLM-L6-v2",
     "intfloat/e5-base",
     "medicalai/ClinicalBERT",
@@ -16,6 +17,8 @@ model_names = [
     "kamalkraj/BioSimCSE-BioLinkBERT-BASE",
     "malteos/scincl",
     "thenlper/gte-base",
+    "allenai/scibert_scivocab_uncased",
+    "BAAI/bge-base-en-v1.5",
     "skyfury/CTMEDBERT_CLS_Encoder",
     "skyfury/CTMEDBERT_CLS_Encoder2",
     "skyfury/CTMEDBERT_CLS_Encoder3",

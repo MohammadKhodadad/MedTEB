@@ -20,7 +20,13 @@ pairclassification_medmcqa_pair_classification
 pairclassification_medqa_pair_classification
 pairclassification_clinical_trials_officialTitle_vsdetailedDescription
 pairclassification_clinical_trials_officialTitle_vsprimaryOutcomes
-retrieval_wiki_diseases_dataset""".split('\n')
+retrieval_wiki_diseases_dataset
+""".split('\n')+ \
+"""classification_wiki_syndromes_and_symptoms_dataset
+classification_wiki_viral_vs_bacterial_dataset
+classification_wiki_syndromes_dataset
+clustering_wiki_syndromes_dataset
+clustering_wiki_special_populations_and_focused_fields_dataset""".split('\n')
 def load_json_files():
     base_dirs = [
         'data/classification/results',
@@ -109,6 +115,8 @@ for col in df.columns:
     print(f'Number of values in column {col}: ',len(df[col].unique()))
 print(df['task_name'].unique())
 
+for task_type in df.task_type.unique():
+    print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
 for task_name in df.task_name.unique():
     print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDBERT_CLS_Encoder3")]["metric"].item()}\n')
 print(df.task_type.value_counts())
