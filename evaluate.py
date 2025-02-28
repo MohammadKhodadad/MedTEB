@@ -2,31 +2,47 @@ import os
 import json
 import glob
 import pandas as pd
+# pairclassification_medmcqa_pair_classification
+# pairclassification_medqa_pair_classification
+# pairclassification_clinical_trials_officialTitle_vsdetailedDescription
+# pairclassification_clinical_trials_officialTitle_vsprimaryOutcomes
+# retrieval_wiki_diseases_dataset
 
-
-removed_tasks = """classification_pmc_diagnostic_vs_therapeutic_dataset
-classification_pubmed_chronic_infectious_genetic_autoimmune_dataset
-classification_pubmed_treatment_prevention_dataset
-classification_pubmed_inflammation_signaling_metabolism_immunity_dataset
-classification_pmc_medical_imaging_types_dataset
-classification_pmc_types_of_interventions_dataset
+removed_tasks = """
 clustering_wiki_broad_medical_topics_dataset
 clustering_mimiciv_general_Neurological_vs_Musculoskeletal_Conditions
 clustering_pmc_types_of_interventions_dataset
 clustering_pubmed_inflammation_signaling_metabolism_immunity_dataset
 clustering_pmc_medical_imaging_types_dataset
 clustering_mimiciv_general_Abdominal_vs_Thoracic_Conditions
-pairclassification_medmcqa_pair_classification
-pairclassification_medqa_pair_classification
-pairclassification_clinical_trials_officialTitle_vsdetailedDescription
-pairclassification_clinical_trials_officialTitle_vsprimaryOutcomes
-retrieval_wiki_diseases_dataset
 """.split('\n')+ \
 """classification_wiki_syndromes_and_symptoms_dataset
 classification_wiki_viral_vs_bacterial_dataset
 classification_wiki_syndromes_dataset
 clustering_wiki_syndromes_dataset
-clustering_wiki_special_populations_and_focused_fields_dataset""".split('\n')
+clustering_wiki_special_populations_and_focused_fields_dataset""".split('\n') 
+
+removed_tasks += \
+"""
+classification_pmc_diagnostic_vs_therapeutic_dataset
+classification_pmc_medical_imaging_types_dataset
+classification_pmc_types_of_interventions_dataset
+classification_pubmed_chronic_infectious_genetic_autoimmune_dataset
+classification_pubmed_treatment_prevention_dataset
+classification_pubmed_inflammation_signaling_metabolism_immunity_dataset""".split('\n') 
+
+# removed_tasks += \
+# """
+# retrieval_pubmed_clinical trials
+# retrieval_pubmed_pathology
+# retrieval_pubmed_retrieval""".split('\n')
+
+
+# removed_tasks += \
+# """
+# retrieval_clinical_trials_officialTitle_vsdetailedDescription
+
+# """.split('\n')
 def load_json_files():
     base_dirs = [
         'data/classification/results',
@@ -34,7 +50,6 @@ def load_json_files():
         'data/pair_classification/results',
         'data/retrieval/results'
     ]
-
     json_data = []
 
     for base_dir in base_dirs:
@@ -118,5 +133,5 @@ print(df['task_name'].unique())
 for task_type in df.task_type.unique():
     print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
 for task_name in df.task_name.unique():
-    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDBERT_CLS_Encoder3")]["metric"].item()}\n')
+    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl4-step_28000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
 print(df.task_type.value_counts())

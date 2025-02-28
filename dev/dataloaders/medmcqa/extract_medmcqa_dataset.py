@@ -126,7 +126,7 @@ def medmc_qa_create_retrieval_dataset(output_file="../data/medmcqa_retrieval_dat
     # Create a DataFrame with the retrieval data
     df = pd.DataFrame({
         "query": queries,
-        "document": documents
+        "corpus": documents
     })
 
     # Save the DataFrame to a CSV file
