@@ -46,6 +46,8 @@ model_names = [
     "skyfury/CTMEDGTE-cl10-step_10500",
 
 ]
+
+
 # model_names = [
 #     "intfloat/e5-base",
 # ]
