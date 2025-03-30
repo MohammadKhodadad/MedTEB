@@ -133,5 +133,5 @@ print(df['task_name'].unique())
 for task_type in df.task_type.unique():
     print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
 for task_name in df.task_name.unique():
-    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl4-step_28000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
+    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl8-step_7000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
 print(df.task_type.value_counts())
