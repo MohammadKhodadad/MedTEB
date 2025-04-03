@@ -31,11 +31,13 @@ classification_pubmed_chronic_infectious_genetic_autoimmune_dataset
 classification_pubmed_treatment_prevention_dataset
 classification_pubmed_inflammation_signaling_metabolism_immunity_dataset""".split('\n') 
 
-# removed_tasks += \
-# """
-# retrieval_pubmed_clinical trials
-# retrieval_pubmed_pathology
-# retrieval_pubmed_retrieval""".split('\n')
+removed_tasks += \
+"""
+classification_wiki_cardiovascular_vs_digestive_dataset
+classification_pubmed_hypertension_diabetes_cancer_alzheimers_influenza_dataset
+clustering_mimiciv_specific_Cancer_Types
+pairclassification_clinical_trials_officialTitle_vsdetailedDescription
+retrieval_Clinical Trials""".split('\n')
 
 
 # removed_tasks += \
@@ -133,5 +135,9 @@ print(df['task_name'].unique())
 for task_type in df.task_type.unique():
     print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
 for task_name in df.task_name.unique():
-    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl8-step_7000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
+    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl9-step_8500")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
 print(df.task_type.value_counts())
+
+latex_table = pivot_table.to_latex(index=True)
+
+print(latex_table)

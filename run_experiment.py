@@ -43,7 +43,8 @@ model_names = [
     # "skyfury/CTMEDGTE-cl10-step_25500",
     # "skyfury/CTMEDGTE-cl10-step_20500",
     # "skyfury/CTMEDGTE-cl10-step_15500",
-    "skyfury/CTMEDGTE-cl10-step_10500",
+    # "skyfury/CTMEDGTE-cl10-step_10500",
+    "hsila/run1-med-nomic"
 
 ]
 
