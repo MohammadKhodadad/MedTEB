@@ -16,7 +16,7 @@ from tqdm import tqdm
 
 
 
-def biorxiv_fetch_articles(n=32768, date_range="2018-01-01/2022-12-20"):
+def medrxiv_fetch_articles(n=32768, date_range="2018-01-01/2022-12-20"):
     """
     Pages through the bioRxiv API from date_range start→end,
     extracts title→sentence1 and abstract→sentence2,
@@ -26,8 +26,8 @@ def biorxiv_fetch_articles(n=32768, date_range="2018-01-01/2022-12-20"):
     cursor = 0
 
     while True:
-        url = f"https://api.medrxiv.org/details/biorxiv/{date_range}/{cursor}"
-        print(f"Fetching biorxiv: {url}")
+        url = f"https://api.medrxiv.org/details/medrxiv/{date_range}/{cursor}"
+        print(f"Fetching medrxiv: {url}")
         resp = requests.get(url); resp.raise_for_status()
         data = resp.json().get("collection", [])
         if not data:
@@ -91,13 +91,13 @@ def _process_doc(doc):
         }
     return None
 
-def biorxiv_create_retrieval_dataset(output_file="../data/biorxiv_dataset.csv"):
+def medrxiv_create_retrieval_dataset(output_file="../data/medrxiv_dataset.csv"):
     """
     Fetch Biorxiv data and generate a retrieval dataset using OpenAI GPT-4,
     in parallel across all CPU cores, with columns ['query','corpus'].
     """
     # 1) fetch & sample
-    biomed_docs = biorxiv_fetch_articles(n=32768)
+    biomed_docs = medrxiv_fetch_articles(n=32768)
     biomed_docs = random.sample(biomed_docs, 16384)
 
     # 2) parallel map + progress bar

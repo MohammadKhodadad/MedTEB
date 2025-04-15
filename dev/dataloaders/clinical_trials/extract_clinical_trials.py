@@ -7,6 +7,46 @@ import random
 from openai import OpenAI
 from dotenv import load_dotenv
 import json
+from sentence_transformers import SentenceTransformer, util
+import random
+
+def sample_hard_negatives(
+    texts: list[str],
+    model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+    top_k: int = 32,
+    seed: int = 42
+) -> list[int]:
+    """
+    Given a list of strings, returns for each index i a single index j!=i,
+    randomly sampled from the top_k most semantically similar texts to texts[i].
+    
+    Uses a BERT‐based SentenceTransformer under the hood.
+    """
+    # 1. Load model & embed all texts
+    model = SentenceTransformer(model_name)
+    embeddings = model.encode(texts, convert_to_tensor=True, show_progress_bar=True)
+    
+    # 2. Semantic search: for each embedding, find top_k+1 hits (including itself)
+    hits = util.semantic_search(
+        query_embeddings=embeddings,
+        corpus_embeddings=embeddings,
+        top_k=top_k + 1  # +1 so we can drop the self‐match
+    )
+    
+    random.seed(seed)
+    hard_negatives = []
+    
+    # 3. For each list of hits, drop self (where corpus_id == query_id) then sample one
+    for i, hit_list in enumerate(hits):
+        # hit_list is a list of dicts: { "corpus_id": int, "score": float }
+        # filter out self-match
+        candidates = [h["corpus_id"] for h in hit_list if h["corpus_id"] != i]
+        if not candidates:
+            # fallback: pick any other index
+            candidates = [j for j in range(len(texts)) if j != i]
+        hard_negatives.append(random.choice(candidates))
+    
+    return hard_negatives
 
 def extract_simplified_dict(data):
     def get_value(d, keys, default=""):
@@ -171,90 +211,167 @@ def clinical_trials_anonymize_corpus(title,corpus):
         return {"corpus": None}
 
 
-def clinical_trials_create_retrieval_dataset(base_api_url = "https://www.clinicaltrials.gov/api/v2/studies", col1='officialTitle',col2='detailedDescription',page_size=5,max_pages=1000, output_file="../data/clinical_trials_retrieval_dataset.json"):
-    """
-    Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
-    """
-    retrieval_data=[]
-    clinical_trials_df = fetch_all_studies_with_pagination(base_api_url, page_size=page_size,max_pages=max_pages)
+import pandas as pd
+import tqdm
+from multiprocessing import Pool, cpu_count
 
-    for index, row in tqdm.tqdm(clinical_trials_df.iterrows()):
-        title=row[col1]
-        corpus=row[col2]
-        if col2=='primaryOutcomes':
-            # corpus=eval(corpus)
-            if isinstance(corpus,list):
-                corpus='\n'.join([' '.join([f'{key}: {item[key]}' for key in item.keys() if key!='timeFrame']) for item in corpus])
+def clinical_trials_create_retrieval_dataset(
+    base_api_url="https://www.clinicaltrials.gov/api/v2/studies",
+    col1='officialTitle',
+    col2='detailedDescription',
+    page_size=5,
+    max_pages=1000,
+    output_file="../data/clinical_trials_retrieval_dataset.json"
+):
+    """
+    Fetch clinical trials data and generate a retrieval dataset using OpenAI GPT-4,
+    but parallelized across CPU cores.
+    """
+    # 1) fetch everything
+    clinical_trials_df = fetch_all_studies_with_pagination(
+        base_api_url,
+        page_size=page_size,
+        max_pages=max_pages
+    )
+    # 2) turn into lightweight records
+    records = clinical_trials_df.to_dict(orient='records')
+
+    # 3) define worker inside so it captures col1/col2
+    def _process_record(record):
+        title = record.get(col1, "")
+        corpus = record.get(col2, "")
+
+        # special handling for primaryOutcomes
+        if col2 == 'primaryOutcomes':
+            if isinstance(corpus, list):
+                # flatten list of dicts into text
+                corpus = '\n'.join(
+                    ' '.join(f"{k}: {item[k]}"
+                             for k in item if k != 'timeFrame')
+                    for item in corpus
+                )
             else:
-                continue
-            
-        if len(title) & len(corpus):
-            new_corpus = corpus
-            # new_corpus = clinical_trials_anonymize_corpus( title, corpus).get('corpus','')
+                return None
 
-            if new_corpus:
-                retrieval_data.append({
-                    "query": title,
-                    "corpus": new_corpus,
-                    "source_title": title
-                })
+        # only keep non-empty title & corpus
+        if not title or not corpus:
+            return None
+
+        # optionally anonymize here:
+        # new_corpus = clinical_trials_anonymize_corpus(title, corpus).get('corpus','')
+        new_corpus = corpus
+
+        if not new_corpus:
+            return None
+
+        return {
+            "query":        title,
+            "corpus":       new_corpus,
+            "source_title": title
+        }
+
+    # 4) parallel map with progress bar
+    with Pool(processes=cpu_count()) as pool:
+        results = list(tqdm.tqdm(
+            pool.imap(_process_record, records, chunksize=32),
+            total=len(records),
+            desc="Processing clinical trials"
+        ))
+
+    # 5) filter out the Nones
+    retrieval_data = [r for r in results if r is not None]
+
+    # 6) save & return
+    df = pd.DataFrame(retrieval_data).dropna()
     if output_file:
-        result=pd.DataFrame(retrieval_data)
-        result=result.dropna()
-        if len(result)>8192:
-            result=result.sample(8192)
-        result.to_csv(output_file)
-    return result
+        if len(df) > 16384:
+            df = df.sample(16384)
+        df.to_csv(output_file, index=False)
+    return df
 
-def clinical_trials_pair_classification_dataset(base_api_url = "https://www.clinicaltrials.gov/api/v2/studies", col1='officialTitle',col2='detailedDescription',page_size=5,max_pages=1000, output_file="../data/clinical_trials_pair_classification_dataset.json"):
-    """
-    Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
-    """
-    pairs = []
-    clinical_trials_df = fetch_all_studies_with_pagination(base_api_url, page_size=page_size,max_pages=max_pages)
+import pandas as pd
+import tqdm
+from multiprocessing import Pool, cpu_count
 
-    for index, row in tqdm.tqdm(clinical_trials_df.iterrows()):
-        title=row[col1]
-        corpus=row[col2]
-        if col2=='primaryOutcomes':
-            # corpus=eval(corpus)
-            if isinstance(corpus,list):
-                corpus='\n'.join([' '.join([f'{key}: {item[key]}' for key in item.keys() if key!='timeFrame']) for item in corpus])
+def clinical_trials_pair_classification_dataset(
+    base_api_url="https://www.clinicaltrials.gov/api/v2/studies",
+    col1='officialTitle',
+    col2='detailedDescription',
+    page_size=5,
+    max_pages=1000,
+    output_file="../data/clinical_trials_pair_classification_dataset.json"
+):
+    """
+    Fetch clinical trials data and generate a pair-classification dataset,
+    parallelizing the positive-pair extraction.
+    """
+    # 1) Fetch all trials into a DataFrame
+    df = fetch_all_studies_with_pagination(
+        base_api_url,
+        page_size=page_size,
+        max_pages=max_pages
+    )
+    records = df.to_dict(orient='records')
+
+    # 2) Worker: turn one record into a positive pair dict or None
+    def _make_positive_pair(record):
+        title = record.get(col1, "")
+        corpus = record.get(col2, "")
+
+        if col2 == 'primaryOutcomes':
+            if isinstance(corpus, list):
+                corpus = '\n'.join(
+                    ' '.join(f"{k}: {item[k]}"
+                             for k in item if k != 'timeFrame')
+                    for item in corpus
+                )
             else:
-                continue
-        if len(title) & len(corpus):
-            new_corpus = corpus
-            # new_corpus = clinical_trials_anonymize_corpus(title, corpus).get('corpus','')
+                return None
 
-            if new_corpus:
-                pairs.append({
-                    "sentence1": title,
-                    "sentence2": new_corpus,
-                    'label': 1
-                })
+        if not title or not corpus:
+            return None
 
-    neg_pairs=[]
-    for idx, pair in enumerate(pairs):
-        if pair["label"] == 1:  # Only process positive pairs
-            # Get a random sentence2 from other pairs
-            unrelated_sentence2 = random.choice(
-                [p["sentence2"] for i, p in enumerate(pairs) if p["label"] == 1 and i != idx]
-            )
-            # Append as a negative pair
-            neg_pairs.append({
-                "sentence1": pair["sentence1"],
-                "sentence2": unrelated_sentence2,
-                "label": 0  # Negative pair
-            })
+        # optional anonymization step could go here
+        new_corpus = corpus
 
-    # Save retrieval dataset
+        if not new_corpus:
+            return None
+
+        return {"sentence1": title, "sentence2": new_corpus, "label": 1}
+
+    # 3) Parallel map with progress bar
+    with Pool(processes=cpu_count()) as pool:
+        pos_results = list(tqdm.tqdm(
+            pool.imap(_make_positive_pair, records, chunksize=32),
+            total=len(records),
+            desc="Generating positive pairs"
+        ))
+
+    # 4) Filter out failures
+    positive_pairs = [p for p in pos_results if p is not None]
+
+    # 5) Build hard negatives
+    all_corpus = [p["sentence2"] for p in positive_pairs]
+    neg_idx   = sample_hard_negatives(all_corpus, top_k=64)
+
+    negative_pairs = []
+    for i, p in enumerate(positive_pairs):
+        negative_pairs.append({
+            "sentence1": p["sentence1"],
+            "sentence2": all_corpus[neg_idx[i]],
+            "label": 0
+        })
+
+    # 6) Save & return
+    all_pairs = positive_pairs + negative_pairs
+    result_df = pd.DataFrame(all_pairs).dropna()
     if output_file:
-        result=pd.DataFrame(pairs)
-        result=result.dropna()
-        if len(result)>8192:
-            result=result.sample(8192)
-        result.to_csv(output_file)
-    return result
+        if len(result_df) > 16384:
+            result_df = result_df.sample(16384)
+        result_df.to_csv(output_file, index=False)
+
+    return result_df
+
 # Example usage
 if __name__ == "__main__":
     # Fetch all study data

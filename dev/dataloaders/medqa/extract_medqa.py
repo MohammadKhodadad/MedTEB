@@ -38,8 +38,8 @@ def create_medqa_pair_classification(output_file="../data/medqa_pair_classificat
 
     # Save the DataFrame to a CSV file
     df=df.dropna()
-    if len(df)>8192:
-        df=df.sample(8192)
+    if len(df)>16384:
+        df=df.sample(16384)
     df.to_csv(output_file, index=False)
     
     print(f"Pair classification data saved to {output_file}")

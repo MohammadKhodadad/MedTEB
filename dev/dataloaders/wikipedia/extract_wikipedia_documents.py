@@ -8,6 +8,48 @@ import pandas as pd
 import numpy as np
 import re
 
+from sentence_transformers import SentenceTransformer, util
+import random
+
+def sample_hard_negatives(
+    texts: list[str],
+    model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+    top_k: int = 32,
+    seed: int = 42
+) -> list[int]:
+    """
+    Given a list of strings, returns for each index i a single index j!=i,
+    randomly sampled from the top_k most semantically similar texts to texts[i].
+    
+    Uses a BERT‐based SentenceTransformer under the hood.
+    """
+    # 1. Load model & embed all texts
+    model = SentenceTransformer(model_name)
+    embeddings = model.encode(texts, convert_to_tensor=True, show_progress_bar=True)
+    
+    # 2. Semantic search: for each embedding, find top_k+1 hits (including itself)
+    hits = util.semantic_search(
+        query_embeddings=embeddings,
+        corpus_embeddings=embeddings,
+        top_k=top_k + 1  # +1 so we can drop the self‐match
+    )
+    
+    random.seed(seed)
+    hard_negatives = []
+    
+    # 3. For each list of hits, drop self (where corpus_id == query_id) then sample one
+    for i, hit_list in enumerate(hits):
+        # hit_list is a list of dicts: { "corpus_id": int, "score": float }
+        # filter out self-match
+        candidates = [h["corpus_id"] for h in hit_list if h["corpus_id"] != i]
+        if not candidates:
+            # fallback: pick any other index
+            candidates = [j for j in range(len(texts)) if j != i]
+        hard_negatives.append(random.choice(candidates))
+    
+    return hard_negatives
+
+
 # Initialize the Wikipedia API for English
 wiki_wiki = wikipediaapi.Wikipedia('Anonymous Name')
 
@@ -175,8 +217,8 @@ def wiki_create_retrieval_dataset(categories, max_pages_per_category=50, max_dep
     # save_data_as_json(retrieval_data, output_file)
     result=pd.DataFrame(retrieval_data)
     result=result.dropna()
-    if len(result)>8192:
-        result=result.sample(8192)
+    if len(result)>16384:
+        result=result.sample(16384)
     result.to_csv(output_file)
 
 
@@ -243,18 +285,26 @@ def wiki_create_pair_classification_data(categories, max_pages_per_category=50, 
                 [p["sentence2"] for i, p in enumerate(pairs) if p["label"] == 1 and i != idx]
             )
             # Append as a negative pair
-            neg_pairs.append({
-                "sentence1": pair["sentence1"],
-                "sentence2": unrelated_sentence2,
-                "label": 0  # Negative pair
-            })
+    all_corpus = [p["sentence2"] for p in pairs]
+
+    # 3. Get one hard-negative index per example
+    neg_idx = sample_hard_negatives(all_corpus, top_k=32)
+
+    # 4. Build your negative pairs
+    neg_pairs = []
+    for i, p in enumerate(pairs):
+        neg_pairs.append({
+            "sentence1": p["sentence1"],
+            "sentence2": all_corpus[neg_idx[i]],
+            "label": 0
+        })
     pairs.extend(neg_pairs)
     # Save pair classification data
     # save_data_as_json(pairs, output_file)
     result=pd.DataFrame(pairs)
     result=result.dropna()
-    if len(result)>8192:
-        result=result.sample(8192)
+    if len(result)>16384:
+        result=result.sample(16384)
     result.to_csv(output_file)
 
     return pairs

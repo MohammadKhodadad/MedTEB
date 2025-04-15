@@ -50,7 +50,7 @@ def medquad_retrieval_extract_and_save(save_path='../data/medquad_retrieval.csv'
     dataset_name = 'lavita/MedQuAD'
     dataset = load_dataset(dataset_name)
     df = pd.DataFrame(dataset['train'])  # Assuming we use the train split
-    df = df.sample(8500)
+    df = df.sample(16384)
     
     questions_answers = list(zip(df['question'].tolist(), df['answer'].tolist()))
     
@@ -62,8 +62,8 @@ def medquad_retrieval_extract_and_save(save_path='../data/medquad_retrieval.csv'
     df = df[['question', 'new_answers']].rename(columns={'question': 'query', 'new_answers': 'corpus'})
     df = df.dropna()
     
-    if len(df) > 8192:
-        df = df.sample(8192)
+    if len(df) > 16384:
+        df = df.sample(16384)
     
     df.to_csv(save_path, index=False)
     print(f"Dataset saved successfully at {save_path}")

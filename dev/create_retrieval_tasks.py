@@ -6,13 +6,14 @@ from dataloaders.medmcqa.extract_medmcqa_dataset import medmc_qa_create_retrieva
 from dataloaders.pubmed.extract_pubmed_papers import pubmed_create_retrieval_dataset
 from dataloaders.clinical_trials.extract_clinical_trials import clinical_trials_create_retrieval_dataset
 from dataloaders.medquad.extract_medquad import medquad_retrieval_extract_and_save
-
+from dataloaders.biorxiv.download_biorxiv_papers import biorxiv_create_retrieval_dataset
+from dataloaders.medrxiv.download_medrxiv_papers import medrxiv_create_retrieval_dataset
 output_file=f"../data/retrieval/wiki_diseases_dataset.csv"
 if os.path.exists(output_file):
     print(f"{output_file} already exists")
 else:
     print(f"Downloading data for task: Diseases and disorders by system")
-    wiki_create_retrieval_dataset(["Diseases and disorders by system"],3000,max_depth=1,output_file=output_file)
+    wiki_create_retrieval_dataset(["Diseases and disorders by system"],16384,max_depth=2,output_file=output_file)
 
 
 
@@ -52,7 +53,7 @@ if os.path.exists(output_file):
     print(f"{output_file} already exists")
 else:
     print(f"Loading Data for task: pubmed pairclassification")
-    pubmed_create_retrieval_dataset(tasks,3000,output_file)
+    pubmed_create_retrieval_dataset(tasks,16384,output_file)
 
 
 medical_retrieval_terms = ["Pathology", "Clinical Trials"]
@@ -67,7 +68,7 @@ for term in medical_retrieval_terms:
         print(f"{output_file} already exists")
     else:
         print(f"Loading Data for task: pubmed pairclassification")
-        pubmed_create_retrieval_dataset(tasks,3000,output_file)
+        pubmed_create_retrieval_dataset(tasks,16384,output_file)
 
 cols2=['detailedDescription','primaryOutcomes']
 for col2 in cols2:
@@ -77,7 +78,7 @@ for col2 in cols2:
         print(f"{output_file} already exists")
     else:
         print(f"Loading Data for task: clinical_trials retrieval")
-        clinical_trials_create_retrieval_dataset(col1=col1,col2=col2,page_size=1000,max_pages=5,output_file=output_file)
+        clinical_trials_create_retrieval_dataset(col1=col1,col2=col2,page_size=1000,max_pages=17,output_file=output_file)
 
 
 output_file=f"../data/retrieval/medquad_dataset.csv"
@@ -86,3 +87,21 @@ if os.path.exists(output_file):
 else:
     print(f"Downloading data for task: MEDQUAD")
     medquad_retrieval_extract_and_save(output_file)
+
+
+
+output_file=f"../data/retrieval/biorxiv_dataset.csv"
+if os.path.exists(output_file):
+    print(f"{output_file} already exists")
+else:
+    print(f"Downloading data for task: BIORXIV")
+    biorxiv_create_retrieval_dataset(output_file)
+
+
+
+output_file=f"../data/retrieval/medrxiv_dataset.csv"
+if os.path.exists(output_file):
+    print(f"{output_file} already exists")
+else:
+    print(f"Downloading data for task: MEDRXIV")
+    medrxiv_create_retrieval_dataset(output_file)

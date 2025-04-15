@@ -81,7 +81,7 @@ def read_results(data):
         model_name = item.get("model_name", "")
         scores = item.get("scores", {})
         test_scores = scores.get("test", [])
-
+        evaluation_time = item.get("evaluation_time", None)
         # Determine the task type and extract the relevant metric
         if len(test_scores)>0:
             test_scores=test_scores[0]
@@ -103,41 +103,81 @@ def read_results(data):
             continue
 
         # Append the row to the list
-        rows.append({"task_name": task_name, "task_type": task_type, "metric": metric,'model_name': model_name})
+        rows.append({"task_name": task_name, "task_type": task_type, "metric": metric,'model_name': model_name,'evaluation_time':evaluation_time})
 
 # Create a DataFrame from the rows
     df = pd.DataFrame(rows)
+    
     return df
 
 
 
 # Load all the relevant JSON data
 all_json_data = load_json_files()
-df= read_results(all_json_data)
+# df= read_results(all_json_data)
+# df.to_csv("results.csv")
+
+# grouped = df.groupby(["task_type", "model_name"])["metric"].agg(["mean", "std"]).reset_index()
+
+# # Create the 'mean ± std' column
+# grouped["mean ± std"] = grouped["mean"].round(2).astype(str) + " ± " + grouped["std"].round(2).astype(str)
+
+# # Pivot table with model_name as index and task_type as columns
+# pivot_table = grouped.pivot(index="model_name", columns="task_type", values="mean ± std")
+
+# pivot_table.to_csv('grouped_results.csv')
+
+# print(f"Loaded {len(df)} JSON files containing relevant data.")
+# # print(df.iloc[0])
+# for col in df.columns:
+#     print(f'Number of values in column {col}: ',len(df[col].unique()))
+# print(df['task_name'].unique())
+
+# for task_type in df.task_type.unique():
+#     print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
+# for task_name in df.task_name.unique():
+#     print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl9-step_8500")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
+# print(df.task_type.value_counts())
+
+# latex_table = pivot_table.to_latex(index=True)
+
+# print(latex_table)
+
+df = read_results(all_json_data)
 df.to_csv("results.csv")
 
+# Group and calculate mean ± std
 grouped = df.groupby(["task_type", "model_name"])["metric"].agg(["mean", "std"]).reset_index()
-
-# Create the 'mean ± std' column
 grouped["mean ± std"] = grouped["mean"].round(2).astype(str) + " ± " + grouped["std"].round(2).astype(str)
 
-# Pivot table with model_name as index and task_type as columns
+# Pivot table of mean ± std
 pivot_table = grouped.pivot(index="model_name", columns="task_type", values="mean ± std")
 
-pivot_table.to_csv('grouped_results.csv')
+# === Compute Model-Wise Averages ===
+# 1. Average across task *types* (4 values)
+task_type_avg = grouped.groupby("model_name")["mean"].mean().round(3).rename("AvgAcrossTaskTypes")
 
-print(f"Loaded {len(df)} JSON files containing relevant data.")
-# print(df.iloc[0])
-for col in df.columns:
-    print(f'Number of values in column {col}: ',len(df[col].unique()))
-print(df['task_name'].unique())
+# 2. Average across all individual *tasks* (e.g., 54 tasks)
+task_name_avg = df.groupby("model_name")["metric"].mean().round(3).rename("AvgAcrossAllTasks")
 
-for task_type in df.task_type.unique():
-    print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
-for task_name in df.task_name.unique():
-    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl9-step_8500")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
-print(df.task_type.value_counts())
+# Combine both into a DataFrame
+model_averages = pd.concat([task_type_avg, task_name_avg], axis=1)
 
-latex_table = pivot_table.to_latex(index=True)
+# Merge with pivot table
 
+
+final_table = pivot_table.copy()
+final_table["AvgAcrossTaskTypes"] = model_averages["AvgAcrossTaskTypes"].astype(str)
+final_table["AvgAcrossAllTasks"] = model_averages["AvgAcrossAllTasks"].astype(str)
+# 3. Average evaluation time per model
+eval_time_avg = df.groupby("model_name")["evaluation_time"].mean().round(2).rename("EvalTime")
+
+# Add to final summary
+final_table["EvalTime"] = eval_time_avg.astype(str)
+
+# Save to CSV
+final_table.to_csv("final_model_summary.csv")
+
+# LaTeX output if needed
+latex_table = final_table.to_latex(index=True)
 print(latex_table)

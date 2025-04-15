@@ -123,8 +123,8 @@ def mimic_create_retrieval_dataset(data_address='../data/discharge_processed.csv
     
     # Save the retrieval dataset to CSV
     retrieval_data=retrieval_data.dropna()
-    if len(retrieval_data)>8192:
-        retrieval_data=retrieval_data.sample(8192)
+    if len(retrieval_data)>16384:
+        retrieval_data=retrieval_data.sample(16384)
     retrieval_data.to_csv(output_dir, index=False)
     
     print(f"Retrieval dataset saved to {output_dir}")
@@ -138,51 +138,131 @@ import random
 import pandas as pd
 
 import pandas as pd
+import pandas as pd
+import random
+from sentence_transformers import SentenceTransformer, util
+
+def sample_hard_negatives(
+    texts: list[str],
+    labels: list[str] = None,
+    model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+    top_k: int = 32,
+    seed: int = 42
+) -> list[int]:
+    """
+    For each text in `texts`, this function computes its embedding and finds the top_k+1 
+    most similar texts (including itself). It then filters the candidates by ensuring that 
+    the candidate text has a different label (if labels are provided). Finally, for each 
+    text, a single candidate index is randomly selected from the remaining candidates.
+    
+    Args:
+        texts: List of texts to embed.
+        labels: List of labels corresponding to each text. If provided, negatives are restricted
+                to those with a different label than the current text.
+        model_name: Name of the SentenceTransformer model to use.
+        top_k: Number of top similar candidates to consider (excluding self-match).
+        seed: Random seed for reproducibility.
+        
+    Returns:
+        A list of indices (one per text) corresponding to a hard negative candidate.
+    """
+    # Load model and compute embeddings
+    model = SentenceTransformer(model_name)
+    embeddings = model.encode(texts, convert_to_tensor=True, show_progress_bar=True)
+    
+    # Compute semantic search results for each embedding. We request top_k+1 so that we can
+    # remove the self-match later.
+    hits = util.semantic_search(embeddings, embeddings, top_k=top_k + 1)
+    
+    random.seed(seed)
+    hard_negatives = []
+    
+    # For each text, process its list of hits
+    for i, hit_list in enumerate(hits):
+        # Exclude the self-match (where corpus_id == query index i)
+        candidates = [h["corpus_id"] for h in hit_list if h["corpus_id"] != i]
+        # If labels are provided, further filter candidates to ensure a different label
+        if labels is not None:
+            candidates = [j for j in candidates if labels[j] != labels[i]]
+        # If no candidate remains after filtering, fall back to using any candidate (with different index)
+        if not candidates:
+            candidates = [j for j in range(len(texts)) if j != i and (labels is None or labels[j] != labels[i])]
+            if not candidates:
+                # As a final fallback, simply use the original candidate list from semantic search
+                candidates = [h["corpus_id"] for h in hit_list if h["corpus_id"] != i]
+        hard_negatives.append(random.choice(candidates))
+    
+    return hard_negatives
 
 def mimic_create_pair_classification_dataset(data_address='../data/discharge_processed.csv',
-                                       col1='Chief Complaint',
-                                       col2='Discharge Diagnosis',
-                                       output_file='../data/mimic_pair_classification.csv',
-                                       num_samples=1000):
-    # Load the data
-    data = pd.read_csv(data_address)
+                                             col1='Chief Complaint',
+                                             col2='Discharge Diagnosis',
+                                             output_file='../data/mimic_pair_classification.csv',
+                                             num_samples=1000):
+    """
+    Create a pair classification dataset for the MIMIC discharge data.
     
-    # Ensure col1 and col2 are present and drop rows with missing values
+    This function loads the dataset, samples a fixed number of rows, and creates positive pairs 
+    (by pairing each row with itself) and negative pairs. For negative pairs, a "hard negative" is
+    selected using a BERT-based embedding model that returns one candidate from the top 32 most 
+    semantically similar texts that have a different label.
+    
+    Args:
+        data_address: Path to the CSV file with discharge data.
+        col1: Name of the first column (e.g., 'Chief Complaint').
+        col2: Name of the second column (e.g., 'Discharge Diagnosis').
+        output_file: File path where the generated dataset will be saved.
+        num_samples: Number of rows to sample from the dataset.
+        
+    Returns:
+        A pandas DataFrame containing the pair classification dataset.
+    """
+    # Load the data and keep only the necessary columns. Drop rows with missing values.
+    data = pd.read_csv(data_address)
     data = data[[col1, col2]].dropna()
     
-    # Convert col2 (e.g., 'Discharge Diagnosis') to lowercase for uniformity
+    # Convert col2 (e.g., 'Discharge Diagnosis') to lowercase for uniformity.
     data[col2] = data[col2].str.lower()
-
-    # Sample a specified number of rows
-    sampled_data = data.sample(num_samples, replace=False)
-
-    # Initialize lists for positive and negative pairs
+    
+    # Sample a specified number of rows from the full dataset.
+    sampled_data = data.sample(num_samples, replace=False).reset_index(drop=True)
+    
+    # Extract texts and labels for negative sampling.
+    texts = sampled_data[col2].astype(str).tolist()
+    # Here, we use the discharge diagnosis as the label.
+    labels = texts.copy()
+    
+    # Get hard negative indices using the helper function.
+    hard_neg_indices = sample_hard_negatives(texts, labels=labels, top_k=128, seed=42)
+    
+    # Initialize lists for positive and negative pairs.
     positive_pairs = []
     negative_pairs = []
-
-    # Iterate over the sampled rows to create positive and negative pairs
-    for _, row in sampled_data.iterrows():
-        # Create a positive pair by pairing the row with itself
-        positive_pairs.append((row[col1], row[col2], 1))  # Label 1 for positive pair
-
-        # Find a row with a different label (different 'Discharge Diagnosis') for a negative pair
-        different_label_row = data[data[col2] != row[col2]].sample(1, replace=False)
-        if not different_label_row.empty:
-            negative_pairs.append((row[col1], different_label_row.iloc[0][col2], 0))  # Label 0 for negative pair
-
-    # Combine positive and negative pairs
+    
+    # Iterate over the sampled rows and build pairs.
+    for i, row in sampled_data.iterrows():
+        # Create a positive pair (label 1)
+        positive_pairs.append((row[col1], row[col2], 1))
+        # Create a negative pair (label 0) by pairing with the hard negative candidate.
+        neg_text = texts[hard_neg_indices[i]]
+        negative_pairs.append((row[col1], neg_text, 0))
+    
+    # Combine positive and negative pairs.
     pairs = positive_pairs + negative_pairs
-
-    # Convert to a DataFrame
-    pair_df = pd.DataFrame(pairs, columns=[f'sentence1', f'sentence2', 'label'])
-    # Save to CSV
-    pair_df=pair_df.dropna()
-    if len(pair_df)>8192:
-        pair_df=pair_df.sample(8192)
+    
+    # Convert to a DataFrame.
+    pair_df = pd.DataFrame(pairs, columns=['sentence1', 'sentence2', 'label'])
+    pair_df = pair_df.dropna()
+    
+    # Optionally, restrict the total number of examples.
+    if len(pair_df) > 16384:
+        pair_df = pair_df.sample(16384)
+    
+    # Save to CSV.
     pair_df.to_csv(output_file, index=False)
     print(f"Pair classification dataset saved to {output_file}")
+    
     return pair_df
-
 
 
 

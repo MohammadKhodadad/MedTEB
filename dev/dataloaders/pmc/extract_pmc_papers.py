@@ -78,8 +78,8 @@ def pmc_fetch_and_save_articles_by_category(categories, max_articles_per_categor
                 result['label'].append(category_name)
         result=pd.DataFrame(result)
         result=result.dropna()
-        if len(result)>8192:
-            result=result.sample(8192)
+        if len(result)>16384:
+            result=result.sample(16384)
         result.to_csv(output_file)
     return all_articles
     print(f"Data saved to {output_file}")

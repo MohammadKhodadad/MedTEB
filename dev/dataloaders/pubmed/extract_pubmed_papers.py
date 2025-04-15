@@ -8,6 +8,50 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import tqdm
 import pandas as pd
+
+from sentence_transformers import SentenceTransformer, util
+import random
+
+def sample_hard_negatives(
+    texts: list[str],
+    model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+    top_k: int = 32,
+    seed: int = 42
+) -> list[int]:
+    """
+    Given a list of strings, returns for each index i a single index j!=i,
+    randomly sampled from the top_k most semantically similar texts to texts[i].
+    
+    Uses a BERT‐based SentenceTransformer under the hood.
+    """
+    # 1. Load model & embed all texts
+    model = SentenceTransformer(model_name)
+    embeddings = model.encode(texts, convert_to_tensor=True, show_progress_bar=True)
+    
+    # 2. Semantic search: for each embedding, find top_k+1 hits (including itself)
+    hits = util.semantic_search(
+        query_embeddings=embeddings,
+        corpus_embeddings=embeddings,
+        top_k=top_k + 1  # +1 so we can drop the self‐match
+    )
+    
+    random.seed(seed)
+    hard_negatives = []
+    
+    # 3. For each list of hits, drop self (where corpus_id == query_id) then sample one
+    for i, hit_list in enumerate(hits):
+        # hit_list is a list of dicts: { "corpus_id": int, "score": float }
+        # filter out self-match
+        candidates = [h["corpus_id"] for h in hit_list if h["corpus_id"] != i]
+        if not candidates:
+            # fallback: pick any other index
+            candidates = [j for j in range(len(texts)) if j != i]
+        hard_negatives.append(random.choice(candidates))
+    
+    return hard_negatives
+
+
+
 # Register your email
 Entrez.email = "your@email.com"
 
@@ -125,36 +169,66 @@ def pubmed_generate_anonymized_question_answer(content):
         return {"question": None, "answer": None}
 
 
-def pubmed_create_retrieval_dataset(categories, max_doc_per_category=10, output_file="../data/wikipedia_retrieval_dataset.json"):
+import json
+import pandas as pd
+import tqdm
+from multiprocessing import Pool, cpu_count
+
+def pubmed_create_retrieval_dataset(
+    categories,
+    max_doc_per_category=10,
+    output_file="../data/wikipedia_retrieval_dataset.json"
+):
     """
-    Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4.
+    Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4,
+    but parallelized across CPU cores.
     """
-    docs = pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=max_doc_per_category, output_file=None)
-    pubmed_docs= []
-    for key in docs.keys():
+    # 1) fetch your docs as before
+    docs = pubmed_fetch_and_save_articles_by_category(
+        categories,
+        max_articles_per_category=max_doc_per_category,
+        output_file=None
+    )
+    pubmed_docs = []
+    for key in docs:
         pubmed_docs.extend(docs[key])
-    retrieval_data = []
 
-    for doc in  tqdm.tqdm(pubmed_docs):
-        if isinstance(doc, dict):
-            # Combine all section content into a single text for generation
-            full_text = json.dumps(doc)
-            qa_pair = pubmed_generate_anonymized_question_answer(full_text)
+    # 2) worker fn: takes one doc, returns dict or None
+    def _process_doc(doc):
+        if not isinstance(doc, dict):
+            return None
+        full_text = json.dumps(doc)
+        qa_pair = pubmed_generate_anonymized_question_answer(full_text)
 
-            if qa_pair["question"] and qa_pair["answer"]:
-                retrieval_data.append({
-                    "query": qa_pair["question"],
-                    "corpus": qa_pair["answer"],
-                    "source_title": doc['title']
-                })
+        q = qa_pair.get("question")
+        a = doc.get("answer")
+        if q and a:
+            return {
+                "query":        q,
+                "corpus":       a,
+                "source_title": doc.get("title", "")
+            }
+        return None
 
-    # Save retrieval dataset
+    # 3) parallel map with progress bar
+    with Pool(processes=cpu_count()) as pool:
+        results = list(tqdm.tqdm(
+            pool.imap(_process_doc, pubmed_docs, chunksize=16),
+            total=len(pubmed_docs),
+            desc="Generating QA pairs"
+        ))
+
+    # 4) filter out the Nones
+    retrieval_data = [r for r in results if r is not None]
+
+    # 5) save & return
+    df = pd.DataFrame(retrieval_data).dropna()
     if output_file:
-        result=pd.DataFrame(retrieval_data)
-        result=result.dropna()
-        if len(result)>8192:
-            result=result.sample(8192)
-        result.to_csv(output_file)
+        if len(df) > 16384:
+            df = df.sample(16384)
+        df.to_csv(output_file, index=False)
+
+    return df
 
 
 
@@ -197,54 +271,80 @@ def pubmed_generate_sentence_pair(content):
 
 
 
-def pubmed_create_pair_classification_data(categories, max_doc_per_category=10, output_file="../data/wikipedia_pair_classification.json"):
+import json
+import random
+import pandas as pd
+import tqdm
+from multiprocessing import Pool, cpu_count
+
+def _make_positive_pair(doc):
     """
-    Create pair classification data using sentences from Wikipedia pages.
+    Worker function: given one `doc`, returns a {"sentence1", "sentence2", "label":1} dict
+    or None if no valid pair could be generated.
     """
-    docs = pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=max_doc_per_category, output_file=None)
-    pubmed_docs= []
-    for key in docs.keys():
+    if not isinstance(doc, dict):
+        return None
+
+    full_text = json.dumps(doc)
+    sentence_pair = pubmed_generate_sentence_pair(full_text)
+    if sentence_pair.get("sentence1") and sentence_pair.get("sentence2"):
+        return {
+            "sentence1": sentence_pair["sentence1"],
+            "sentence2": sentence_pair["sentence2"],
+            "label": 1
+        }
+    return None
+
+def pubmed_create_pair_classification_data(categories,
+                                           max_doc_per_category=10,
+                                           output_file="../data/wikipedia_pair_classification.json"):
+    """
+    Create pair classification data using sentences from Wikipedia pages,
+    but parallelize the positive-pair generation across multiple processes.
+    """
+    # 1) fetch your docs as before
+    docs = pubmed_fetch_and_save_articles_by_category(
+        categories,
+        max_articles_per_category=max_doc_per_category,
+        output_file=None
+    )
+    pubmed_docs = []
+    for key in docs:
         pubmed_docs.extend(docs[key])
-    pairs = []
 
-    for doc in tqdm.tqdm(pubmed_docs):
-        if isinstance(doc, dict):
-            # Combine all section content into a single text
-            full_text = json.dumps(doc)
+    # 2) spawn a pool and map docs → positive pairs
+    with Pool(processes=cpu_count()) as pool:
+        # imap gives you an iterator, so you can wrap it in tqdm
+        results = list(tqdm.tqdm(
+            pool.imap(_make_positive_pair, pubmed_docs, chunksize=16),
+            total=len(pubmed_docs),
+            desc="Generating positive pairs"
+        ))
 
-            # Generate positive pair
-            sentence_pair = pubmed_generate_sentence_pair(full_text)
-            if sentence_pair["sentence1"] and sentence_pair["sentence2"]:
-                pairs.append({
-                    "sentence1": sentence_pair["sentence1"],
-                    "sentence2": sentence_pair["sentence2"],
-                    "label": 1  # Positive pair
-                })
-    neg_pairs=[]
-    for idx, pair in enumerate(pairs):
-        if pair["label"] == 1:  # Only process positive pairs
-            # Get a random sentence2 from other pairs
-            unrelated_sentence2 = random.choice(
-                [p["sentence2"] for i, p in enumerate(pairs) if p["label"] == 1 and i != idx]
-            )
-            # Append as a negative pair
-            neg_pairs.append({
-                "sentence1": pair["sentence1"],
-                "sentence2": unrelated_sentence2,
-                "label": 0  # Negative pair
-            })
-    pairs.extend(neg_pairs)
-    # Save pair classification data
+    # 3) filter out the Nones
+    positive_pairs = [r for r in results if r is not None]
+
+    # 4) build your hard negatives exactly as before
+    all_corpus = [p["sentence2"] for p in positive_pairs]
+    neg_idx = sample_hard_negatives(all_corpus, top_k=64)
+
+    negative_pairs = []
+    for i, p in enumerate(positive_pairs):
+        negative_pairs.append({
+            "sentence1": p["sentence1"],
+            "sentence2": all_corpus[neg_idx[i]],
+            "label": 0
+        })
+
+    pairs = positive_pairs + negative_pairs
+
+    # 5) save out
     if output_file:
+        df = pd.DataFrame(pairs).dropna()
+        if len(df) > 16384:
+            df = df.sample(16384)
+        df.to_csv(output_file, index=False)
 
-        result=pd.DataFrame(pairs)
-        result=result.dropna()
-        if len(result)>4096:
-            result=result.sample(4096)
-        result.to_csv(output_file)
-        
-        # with open(output_file, mode='w', encoding='utf-8') as file:
-        #     json.dump(pairs, file, indent=4)
     return pairs
 
 if __name__ == "__main__":
