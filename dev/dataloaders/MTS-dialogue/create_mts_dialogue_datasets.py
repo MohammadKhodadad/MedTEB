@@ -8,6 +8,7 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 def generate_question(dialogue):
     """Generate a question from a given dialogue using the OpenAI Chat API."""
     try:
@@ -16,11 +17,13 @@ def generate_question(dialogue):
             {"role": "system", "content": "You are a helpful assistant."},
             {
                 "role": "user",
-                "content": f"Given the following conversation, generate a general medical question that requires \
-                      the content of this conversation to be retrieved in order to find the answer in \
-                          a Retrieval-Augmented Generation (RAG) system. \
-                            I age exists in the conversation, and you wanted to include it the question, \
-                                  replace it with a range of age:\n\n{dialogue}\n\nQ:"
+                "content": (
+                    f"Given the following conversation, generate a general medical question that requires "
+                    f"the content of this conversation to be retrieved in order to find the answer in "
+                    f"a Retrieval-Augmented Generation (RAG) system. "
+                    f"If age exists in the conversation, replace it with a range (e.g., '30-40 years').\n\n"
+                    f"{dialogue}\n\nQ:"
+                )
             }
         ]
 
@@ -60,14 +63,15 @@ def process_dataset(file_path, output_file="../data/mts_dialogue_question_answer
 
     # Save the DataFrame to a CSV file
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    qa_df=qa_df.dropna()
-    if len(qa_df)>16384:
-        qa_df=qa_df.sample(16384)
+    qa_df = qa_df.dropna()
+    if len(qa_df) > 16384:
+        qa_df = qa_df.sample(16384)
     qa_df.to_csv(output_file, index=False)
-    
+
     print(f"Question and answer pairs saved to {output_file}")
+
 
 if __name__ == "__main__":
     # Example usage
-    file_path = "https://raw.githubusercontent.com/abachaa/MTS-Dialog/main/Main-Dataset/MTS-Dialog-TrainingSet.csv" 
+    file_path = "https://raw.githubusercontent.com/abachaa/MTS-Dialog/main/Main-Dataset/MTS-Dialog-TrainingSet.csv"
     process_dataset(file_path)
