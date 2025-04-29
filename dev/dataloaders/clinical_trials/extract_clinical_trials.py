@@ -214,84 +214,121 @@ def clinical_trials_anonymize_corpus(title,corpus):
 import pandas as pd
 import tqdm
 from multiprocessing import Pool, cpu_count
+import pandas as pd
+import tqdm
+from multiprocessing import Pool, cpu_count
+from functools import partial
 
+# ✅ Top-level function for multiprocessing
+def _process_clinical_trial_record(record, col1='officialTitle', col2='detailedDescription'):
+    title = record.get(col1, "")
+    corpus = record.get(col2, "")
+
+    if col2 == 'primaryOutcomes':
+        if isinstance(corpus, list):
+            corpus = '\n'.join(
+                ' '.join(f"{k}: {item[k]}" for k in item if k != 'timeFrame')
+                for item in corpus
+            )
+        else:
+            return None
+
+    if not title or not corpus:
+        return None
+
+    # Optional anonymization placeholder
+    new_corpus = corpus
+
+    if not new_corpus:
+        return None
+
+    return {
+        "query":        title,
+        "corpus":       new_corpus,
+        "source_title": title
+    }
+
+
+# ✅ Main function using multiprocessing
 def clinical_trials_create_retrieval_dataset(
     base_api_url="https://www.clinicaltrials.gov/api/v2/studies",
     col1='officialTitle',
     col2='detailedDescription',
     page_size=5,
     max_pages=1000,
-    output_file="../data/clinical_trials_retrieval_dataset.json"
+    output_file="../data/clinical_trials_retrieval_dataset.csv"
 ):
     """
     Fetch clinical trials data and generate a retrieval dataset using OpenAI GPT-4,
-    but parallelized across CPU cores.
+    parallelized across CPU cores.
     """
-    # 1) fetch everything
+    # Step 1: fetch data
     clinical_trials_df = fetch_all_studies_with_pagination(
         base_api_url,
         page_size=page_size,
         max_pages=max_pages
     )
-    # 2) turn into lightweight records
     records = clinical_trials_df.to_dict(orient='records')
 
-    # 3) define worker inside so it captures col1/col2
-    def _process_record(record):
-        title = record.get(col1, "")
-        corpus = record.get(col2, "")
+    # Step 2: partial function to lock in col1 and col2
+    worker_fn = partial(_process_clinical_trial_record, col1=col1, col2=col2)
 
-        # special handling for primaryOutcomes
-        if col2 == 'primaryOutcomes':
-            if isinstance(corpus, list):
-                # flatten list of dicts into text
-                corpus = '\n'.join(
-                    ' '.join(f"{k}: {item[k]}"
-                             for k in item if k != 'timeFrame')
-                    for item in corpus
-                )
-            else:
-                return None
-
-        # only keep non-empty title & corpus
-        if not title or not corpus:
-            return None
-
-        # optionally anonymize here:
-        # new_corpus = clinical_trials_anonymize_corpus(title, corpus).get('corpus','')
-        new_corpus = corpus
-
-        if not new_corpus:
-            return None
-
-        return {
-            "query":        title,
-            "corpus":       new_corpus,
-            "source_title": title
-        }
-
-    # 4) parallel map with progress bar
+    # Step 3: parallel processing
     with Pool(processes=cpu_count()) as pool:
         results = list(tqdm.tqdm(
-            pool.imap(_process_record, records, chunksize=32),
+            pool.imap(worker_fn, records, chunksize=32),
             total=len(records),
             desc="Processing clinical trials"
         ))
 
-    # 5) filter out the Nones
+    # Step 4: filter out Nones
     retrieval_data = [r for r in results if r is not None]
 
-    # 6) save & return
+    # Step 5: save & return
     df = pd.DataFrame(retrieval_data).dropna()
     if output_file:
         if len(df) > 16384:
             df = df.sample(16384)
         df.to_csv(output_file, index=False)
+
     return df
+
 
 import pandas as pd
 import tqdm
 from multiprocessing import Pool, cpu_count
+
+import pandas as pd
+import tqdm
+from multiprocessing import Pool, cpu_count
+from functools import partial
+
+# Top-level function so it can be pickled
+def _make_positive_pair(record, col1='officialTitle', col2='detailedDescription'):
+    title = record.get(col1, "")
+    corpus = record.get(col2, "")
+
+    if col2 == 'primaryOutcomes':
+        if isinstance(corpus, list):
+            corpus = '\n'.join(
+                ' '.join(f"{k}: {item[k]}"
+                         for k in item if k != 'timeFrame')
+                for item in corpus
+            )
+        else:
+            return None
+
+    if not title or not corpus:
+        return None
+
+    # Optional anonymization can be added here
+    new_corpus = corpus
+
+    if not new_corpus:
+        return None
+
+    return {"sentence1": title, "sentence2": new_corpus, "label": 1}
+
 
 def clinical_trials_pair_classification_dataset(
     base_api_url="https://www.clinicaltrials.gov/api/v2/studies",
@@ -299,7 +336,7 @@ def clinical_trials_pair_classification_dataset(
     col2='detailedDescription',
     page_size=5,
     max_pages=1000,
-    output_file="../data/clinical_trials_pair_classification_dataset.json"
+    output_file="../data/clinical_trials_pair_classification_dataset.csv"
 ):
     """
     Fetch clinical trials data and generate a pair-classification dataset,
@@ -313,46 +350,21 @@ def clinical_trials_pair_classification_dataset(
     )
     records = df.to_dict(orient='records')
 
-    # 2) Worker: turn one record into a positive pair dict or None
-    def _make_positive_pair(record):
-        title = record.get(col1, "")
-        corpus = record.get(col2, "")
-
-        if col2 == 'primaryOutcomes':
-            if isinstance(corpus, list):
-                corpus = '\n'.join(
-                    ' '.join(f"{k}: {item[k]}"
-                             for k in item if k != 'timeFrame')
-                    for item in corpus
-                )
-            else:
-                return None
-
-        if not title or not corpus:
-            return None
-
-        # optional anonymization step could go here
-        new_corpus = corpus
-
-        if not new_corpus:
-            return None
-
-        return {"sentence1": title, "sentence2": new_corpus, "label": 1}
-
-    # 3) Parallel map with progress bar
+    # 2) Parallel map with progress bar
+    make_pair_fn = partial(_make_positive_pair, col1=col1, col2=col2)
     with Pool(processes=cpu_count()) as pool:
         pos_results = list(tqdm.tqdm(
-            pool.imap(_make_positive_pair, records, chunksize=32),
+            pool.imap(make_pair_fn, records, chunksize=32),
             total=len(records),
             desc="Generating positive pairs"
         ))
 
-    # 4) Filter out failures
+    # 3) Filter out failures
     positive_pairs = [p for p in pos_results if p is not None]
 
-    # 5) Build hard negatives
+    # 4) Build hard negatives
     all_corpus = [p["sentence2"] for p in positive_pairs]
-    neg_idx   = sample_hard_negatives(all_corpus, top_k=64)
+    neg_idx = sample_hard_negatives(all_corpus, top_k=64)
 
     negative_pairs = []
     for i, p in enumerate(positive_pairs):
@@ -362,7 +374,7 @@ def clinical_trials_pair_classification_dataset(
             "label": 0
         })
 
-    # 6) Save & return
+    # 5) Save & return
     all_pairs = positive_pairs + negative_pairs
     result_df = pd.DataFrame(all_pairs).dropna()
     if output_file:
@@ -371,6 +383,7 @@ def clinical_trials_pair_classification_dataset(
         result_df.to_csv(output_file, index=False)
 
     return result_df
+
 
 # Example usage
 if __name__ == "__main__":

@@ -8,19 +8,22 @@ import torch
 import os
 
 model_names = [
-    "bert-base-uncased",
-    "BASF-AI/chem-embed-text-v1",
-    "sentence-transformers/all-MiniLM-L6-v2",
-    "intfloat/e5-base",
-    "medicalai/ClinicalBERT",
-    "nomic-ai/nomic-embed-text-v1-unsupervised",
-    "nomic-ai/nomic-embed-text-v1",
-    "emilyalsentzer/Bio_ClinicalBERT",
-    "kamalkraj/BioSimCSE-BioLinkBERT-BASE",
-    "malteos/scincl",
-    "thenlper/gte-base",
-    "allenai/scibert_scivocab_uncased",
-    "BAAI/bge-base-en-v1.5",
+    # "bert-base-uncased",
+    # "BASF-AI/chem-embed-text-v1",
+    # "sentence-transformers/all-MiniLM-L6-v2",
+    # "sentence-transformers/all-mpnet-base-v2",
+    # "microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext",
+    # "bionlp/bluebert_pubmed_mimic_uncased_L-12_H-768_A-12",
+    # "intfloat/e5-base",
+    # "medicalai/ClinicalBERT",
+    # "nomic-ai/nomic-embed-text-v1-unsupervised",
+    # "nomic-ai/nomic-embed-text-v1",
+    # "emilyalsentzer/Bio_ClinicalBERT",
+    # "kamalkraj/BioSimCSE-BioLinkBERT-BASE",
+    # "malteos/scincl",
+    # "thenlper/gte-base",
+    # "allenai/scibert_scivocab_uncased",
+    # "BAAI/bge-base-en-v1.5",
     # "skyfury/CTMEDBERT_CLS_Encoder",
     # "skyfury/CTMEDBERT_CLS_Encoder2",
     # "skyfury/CTMEDBERT_CLS_Encoder3",
@@ -40,15 +43,20 @@ model_names = [
     # "skyfury/CTMEDGTE-cl7-step_6000",
     # "skyfury/CTMEDGTE7_encoder",
     # "skyfury/CTMEDGTE-cl8-step_7000",
-    "skyfury/CTMEDGTE-cl9-step_8500",
+    # "skyfury/CTMEDGTE-cl9-step_8500",
     # "skyfury/CTMEDGTE-cl10-step_25500",
     # "skyfury/CTMEDGTE-cl10-step_20500",
     # "skyfury/CTMEDGTE-cl10-step_15500",
     # "skyfury/CTMEDGTE-cl10-step_10500",
-    "skyfury/CTMEDGTE-cl12-step_8500",
+    # "skyfury/CTMEDGTE-cl12-step_8500",
     # "skyfury/CTMEDGTE-cl12-step_11500",
     # "skyfury/CTMEDGTE-cl12-step_3500",
-    "hsila/run1-med-nomic",
+    # "skyfury/CTMEDGTE-cl13-step_3500",
+    # "skyfury/CTMEDGTE-cl13-step_8500",
+    "skyfury/CTMEDGTE-cl14-step_4000",
+    "skyfury/CTMEDGTE-cl14-step_8000",
+    # "skyfury/CTMEDGTE-cl14-step_8500",
+    # "hsila/run1-med-nomic",
 
 ]
 
@@ -75,8 +83,8 @@ for address in addresses:
                 # model = get_model(name)
                 model = SentenceTransformer(name, device=device, trust_remote_code=True)
                 results = mteb.run(model)
-            except:
-                print(f"Error with model: {name}")
+            except Exception as e:
+                print(f"Error with model: {name}: {e}")
 
 # Classification
 
@@ -103,8 +111,8 @@ for address in addresses:
                 # model = get_model(name)
                 model = SentenceTransformer(name, device=device, trust_remote_code=True)
                 results = mteb.run(model)
-            except:
-                print(f"Error with model: {name}")
+            except Exception as e:
+                print(f"Error with model: {name}: {e}")
 
 os.chdir('../pair_classification')
 # Pair Classification 
@@ -122,8 +130,8 @@ for address in addresses:
                 # model = get_model(name)
                 model = SentenceTransformer(name, device=device, trust_remote_code=True)
                 results = mteb.run(model)
-            except:
-                print(f"Error with model: {name}")
+            except Exception as e:
+                print(f"Error with model: {name}: {e}")
 
 os.chdir('../retrieval')
 # Retrieval 
@@ -141,6 +149,6 @@ for address in addresses:
                 # model = get_model(name)
                 model = SentenceTransformer(name, device=device, trust_remote_code=True)
                 results = mteb.run(model)
-            except:
-                print(f"Error with model: {name}")
+            except Exception as e:
+                print(f"Error with model: {name}: {e}")
         

@@ -7,11 +7,11 @@ import os
 # ====== Step 1: Load your sentence embedding model ======
 # You can change this to your own local model or HuggingFace model
 # model_name_or_path = "skyfury/CTMEDGTE-cl9-step_8500"  # Change this if needed
-model_name_or_path = "skyfury/CTMEDGTE-cl12-step_8500"  # Change this if needed
+model_name_or_path = "skyfury/CTMEDGTE-cl14-step_8000"  # Change this if needed
 model = SentenceTransformer(model_name_or_path)
 
 # ====== Step 2: Define the task you want to evaluate ======
-tasks = mteb.get_benchmark("MTEB(Medical)")
+tasks = mteb.get_benchmark("MTEB(eng, v1)")
 
 # ====== Step 3: Run the evaluation ======
 evaluation = MTEB(tasks=tasks)

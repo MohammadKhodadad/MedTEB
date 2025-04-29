@@ -168,22 +168,42 @@ def pubmed_generate_anonymized_question_answer(content):
         print(f"Error generating question-answer pair: {e}")
         return {"question": None, "answer": None}
 
-
 import json
 import pandas as pd
 import tqdm
 from multiprocessing import Pool, cpu_count
+from functools import partial
+
+# ✅ Move this to top-level so it can be used in multiprocessing
+def process_pubmed_doc(doc):
+    if not isinstance(doc, dict):
+        # print('doc not dict')
+        return None
+    full_text = json.dumps(doc)
+    qa_pair = pubmed_generate_anonymized_question_answer(full_text)
+
+    q = qa_pair.get("question")
+    a = doc.get("abstract")  # NOTE: assumes doc has "answer" key
+    if q and a:
+        return {
+            "query":        q,
+            "corpus":       a,
+            "source_title": doc.get("title", "")
+        }
+    # print(f'Question: {q}, Answer: {a}')
+    return None
+
 
 def pubmed_create_retrieval_dataset(
     categories,
     max_doc_per_category=10,
-    output_file="../data/wikipedia_retrieval_dataset.json"
+    output_file="../data/wikipedia_retrieval_dataset.csv"
 ):
     """
-    Fetch Wikipedia data and generate a retrieval dataset using OpenAI GPT-4,
-    but parallelized across CPU cores.
+    Fetch PubMed data and generate a retrieval dataset using OpenAI GPT-4,
+    parallelized across CPU cores.
     """
-    # 1) fetch your docs as before
+    # 1) Fetch documents
     docs = pubmed_fetch_and_save_articles_by_category(
         categories,
         max_articles_per_category=max_doc_per_category,
@@ -192,36 +212,18 @@ def pubmed_create_retrieval_dataset(
     pubmed_docs = []
     for key in docs:
         pubmed_docs.extend(docs[key])
-
-    # 2) worker fn: takes one doc, returns dict or None
-    def _process_doc(doc):
-        if not isinstance(doc, dict):
-            return None
-        full_text = json.dumps(doc)
-        qa_pair = pubmed_generate_anonymized_question_answer(full_text)
-
-        q = qa_pair.get("question")
-        a = doc.get("answer")
-        if q and a:
-            return {
-                "query":        q,
-                "corpus":       a,
-                "source_title": doc.get("title", "")
-            }
-        return None
-
-    # 3) parallel map with progress bar
+    # 2) Process documents in parallel
     with Pool(processes=cpu_count()) as pool:
         results = list(tqdm.tqdm(
-            pool.imap(_process_doc, pubmed_docs, chunksize=16),
+            pool.imap(process_pubmed_doc, pubmed_docs, chunksize=16),
             total=len(pubmed_docs),
             desc="Generating QA pairs"
         ))
 
-    # 4) filter out the Nones
+    # 3) Filter out invalid results
     retrieval_data = [r for r in results if r is not None]
-
-    # 5) save & return
+    
+    # 4) Save & return
     df = pd.DataFrame(retrieval_data).dropna()
     if output_file:
         if len(df) > 16384:
@@ -354,7 +356,7 @@ if __name__ == "__main__":
         "Risk Assessment": "risk assessment OR risk management OR evaluation",
         "Clinical Care": "hospital OR intensive care OR emergency room OR clinical care OR healthcare"
     }
-
-    # pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file='../data/pubmed_data_by_category.json')
-    pubmed_create_retrieval_dataset(categories, max_doc_per_category=10, output_file="../data/pubmed_retrieval_data.json")
-    pubmed_create_pair_classification_data(categories, max_doc_per_category=10, output_file="../data/pubmed_pair_classification.json")
+    # print(pubmed_generate_anonymized_question_answer("Polycystic ovary syndrome (PCOS) poses a significant threat to women's fertility and quality of life. Studies have found a close association between the environmental contaminant tributyltin (TBT) and the occurrence of PCOS. The main objective of this study was to investigate the specific mechanisms by which TBT adversely affects the growth of ovarian granulosa cells. Cell viability, cycle, proliferation, and apoptosis were measured by 3-(4, 5-dimethyl-2-thiazolyl)-2, 5-diphenyl-2-H-tetrazolium bromide (MTT), 5-ethynyl-2'-deoxyuridine (EdU), and flow cytometry. Simultaneously, lactate dehydrogenase (LDH) leakage and Caspase-3 activity were measured by the corresponding kits. Besides, western blot was used to analyze the protein levels of cyclin-dependent kinase inhibitor 1\u202fC (CDKN1C) and the transcription factor Yin Yang 1 (YY1). TBT severely impaired the viability, cell cycle, and proliferation capacity of granulosa cells, and induced their apoptosis. Silencing CDKN1C and YY1 alleviated the damage caused by TBT to the cells, but these repair effects were weakened by CDKN1C overexpressed. By inhibiting the phosphatidylinositol 3-kinase/protein kinase B (PI3K/AKT) signaling pathway, TBT upregulated the YY1-mediated CDNK1C, and further exacerbated the damage to granulosa cells. This study revealed the mechanism that TBT induced the loss of ovarian granulosa cells in PCOS patients by upregulating YY1-mediated CDKN1C expression, which provided new ideas and targets for the pathogenesis and treatment of PCOS."))
+    # # pubmed_fetch_and_save_articles_by_category(categories, max_articles_per_category=500, output_file='../data/pubmed_data_by_category.json')
+    # pubmed_create_retrieval_dataset(categories, max_doc_per_category=1, output_file="../data/pubmed_retrieval_data.csv")
+    # pubmed_create_pair_classification_data(categories, max_doc_per_category=1, output_file="../data/pubmed_pair_classification.json")
