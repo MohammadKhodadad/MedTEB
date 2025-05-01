@@ -5,7 +5,7 @@ import pandas as pd
 
 
 name_mapping = {
-    "BAAI__bge-base-en-v1.5":                      "BAAI Bge Base En V1.5",
+    "BAAI__bge-base-en-v1.5":                     "BAAI Bge Base En V1.5",
     "BASF-AI__chem-embed-text-v1":                "BASF AI Chem Embed Text V1",
     "allenai__scibert_scivocab_uncased":          "AllenAI Scibert Scivocab Uncased",
     "bionlp__bluebert_pubmed_mimic_uncased_L-12_H-768_A-12":
@@ -28,8 +28,9 @@ name_mapping = {
     "skyfury__CTMEDGTE-cl12-step_3500":           "Skyfury CTMEDGTE Cl12 Step 3500",
     "skyfury__CTMEDGTE-cl12-step_8500":           "Skyfury CTMEDGTE Cl12 Step 8500",
     "skyfury__CTMEDGTE-cl9-step_8500":            "Skyfury CTMEDGTE Cl9 Step 8500",
-    "skyfury__CTMEDGTE-cl14-step_8000":            "Skyfury CTMEDGTE Cl14 Step 8000",
+    "skyfury__CTMEDGTE-cl14-step_8000":           "Skyfury CTMEDGTE Cl14 Step 8000",
     "thenlper__gte-base":                         "Thenlper GTE Base",
+    "abhinand__MedEmbed-base-v0.1":               "Abhinand MedEmbed Base",
 }
 
 
