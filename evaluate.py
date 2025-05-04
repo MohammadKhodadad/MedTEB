@@ -29,6 +29,7 @@ name_mapping = {
     "skyfury__CTMEDGTE-cl12-step_8500":           "Skyfury CTMEDGTE Cl12 Step 8500",
     "skyfury__CTMEDGTE-cl9-step_8500":            "Skyfury CTMEDGTE Cl9 Step 8500",
     "skyfury__CTMEDGTE-cl14-step_8000":           "Skyfury CTMEDGTE Cl14 Step 8000",
+    "skyfury__CTMEDGTE-cl15-step_8000":           "Skyfury CTMEDGTE Cl15 Step 8000",
     "thenlper__gte-base":                         "Thenlper GTE Base",
     "abhinand__MedEmbed-base-v0.1":               "Abhinand MedEmbed Base",
 }
@@ -40,17 +41,63 @@ name_mapping = {
 # paiclustering_mimiciv_general_Neurological_vs_Musculoskeletal_Conditionsrclassification_clinical_trials_officialTitle_vsprimaryOutcomes
 # retrieval_wiki_diseases_dataset
 
+
+
+
+
+
+
+
+
+
+# classification_wiki_syndromes_and_symptoms_dataset
+# classification_pmc_diagnostic_vs_therapeutic_dataset
+# classification_pubmed_chronic_infectious_genetic_autoimmune_dataset
+# classification_wiki_infection_vs_cancer_dataset
+# classification_wiki_cardiovascular_vs_respiratory_dataset
+# classification_pubmed_treatment_prevention_dataset
+# classification_pubmed_inflammation_signaling_metabolism_immunity_dataset
+# classification_wiki_cardiovascular_vs_digestive_dataset
+# classification_pubmed_hypertension_diabetes_cancer_alzheimers_influenza_dataset
+# classification_pmc_types_of_interventions_dataset
+# clustering_mimiciv_general_Neurological_vs_Musculoskeletal_Conditions
+# clustering_pmc_types_of_interventions_dataset
+# clustering_pubmed_chronic_infectious_genetic_autoimmune_dataset
+# clustering_pubmed_inflammation_signaling_metabolism_immunity_dataset
+# clustering_mimiciv_general_Mortality_vs_Survivable_Conditions
+# clustering_pubmed_hypertension_diabetes_cancer_alzheimers_influenza_dataset
+# clustering_mimiciv_general_Abdominal_vs_Thoracic_Conditions
+# retrieval_wiki_diseases_dataset
+# classification_wiki_viral_vs_bacterial_dataset
+
+
+# classification_mimiciv_general_Cancer_vs_Chronic_Conditions
+# classification_mimiciv_readmission_7_days
+# classification_mimiciv_general_Abdominal_vs_Thoracic_Conditions
+# clustering_mimiciv_specific_Cancer_Types
+# retrieval_pubmed_pathology
+# retrieval_pubmed_clinical trials
+
+
 removed_tasks = """
+
 classification_wiki_syndromes_and_symptoms_dataset
-classification_pmc_diagnostic_vs_therapeutic_dataset
+classification_mimiciv_general_Cancer_vs_Chronic_Conditions
+classification_mimiciv_readmission_7_days
+classification_wiki_surgical_specialties_dataset
 classification_pubmed_chronic_infectious_genetic_autoimmune_dataset
 classification_wiki_infection_vs_cancer_dataset
+classification_wiki_viral_vs_bacterial_dataset
 classification_wiki_cardiovascular_vs_respiratory_dataset
 classification_pubmed_treatment_prevention_dataset
 classification_pubmed_inflammation_signaling_metabolism_immunity_dataset
 classification_wiki_cardiovascular_vs_digestive_dataset
 classification_pubmed_hypertension_diabetes_cancer_alzheimers_influenza_dataset
+classification_mimiciv_general_Abdominal_vs_Thoracic_Conditions
 classification_pmc_types_of_interventions_dataset
+
+
+
 clustering_mimiciv_general_Neurological_vs_Musculoskeletal_Conditions
 clustering_pmc_types_of_interventions_dataset
 clustering_pubmed_chronic_infectious_genetic_autoimmune_dataset
@@ -58,20 +105,25 @@ clustering_pubmed_inflammation_signaling_metabolism_immunity_dataset
 clustering_mimiciv_general_Mortality_vs_Survivable_Conditions
 clustering_pubmed_hypertension_diabetes_cancer_alzheimers_influenza_dataset
 clustering_mimiciv_general_Abdominal_vs_Thoracic_Conditions
-retrieval_wiki_diseases_dataset
-classification_wiki_viral_vs_bacterial_dataset
+clustering_wiki_special_populations_and_focused_fields_dataset
 
 
-classification_mimiciv_general_Cancer_vs_Chronic_Conditions
-classification_mimiciv_readmission_7_days
-classification_mimiciv_general_Abdominal_vs_Thoracic_Conditions
-clustering_mimiciv_specific_Cancer_Types
-retrieval_pubmed_pathology
+
+
+
+
+
+
+
 retrieval_pubmed_clinical trials
+retrieval_pubmed_pathology
 
+
+
+retrieval_wiki_diseases_dataset
 """.split('\n')
 
-
+# removed_tasks = ''
 # removed_tasks += \
 # """
 # retrieval_clinical_trials_officialTitle_vsdetailedDescription
@@ -180,7 +232,8 @@ df.to_csv("results.csv")
 for task_type in df.task_type.unique():
     print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
 for task_name in df.task_name.unique():
-    print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl14-step_8000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
+    if df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl15-step_8000")]["metric"].item() < df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item():
+        print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl15-step_8000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
 # print(df.task_type.value_counts())
 # Group and calculate mean ± std
 grouped = df.groupby(["task_type", "model_name"])["metric"].agg(["mean", "std"]).reset_index()

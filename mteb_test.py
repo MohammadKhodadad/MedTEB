@@ -3,7 +3,8 @@ from mteb import MTEB
 import mteb
 import json
 import os
-
+os.environ["HF_DATASETS_CACHE"] = "/scratch/skyfury/hf_datasets"
+os.environ["HF_HOME"] = "/scratch/skyfury/HF"
 # ====== Step 1: Load your sentence embedding model ======
 # You can change this to your own local model or HuggingFace model
 # model_name_or_path = "skyfury/CTMEDGTE-cl9-step_8500"  # Change this if needed
