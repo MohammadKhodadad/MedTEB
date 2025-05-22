@@ -30,6 +30,7 @@ name_mapping = {
     "skyfury__CTMEDGTE-cl9-step_8500":            "Skyfury CTMEDGTE Cl9 Step 8500",
     "skyfury__CTMEDGTE-cl14-step_8000":           "Skyfury CTMEDGTE Cl14 Step 8000",
     "skyfury__CTMEDGTE-cl15-step_8000":           "Skyfury CTMEDGTE Cl15 Step 8000",
+    "skyfury__CTMEDGTE-mb-cl15-step_8500":        "Skyfury CTMEDGTE mb Cl15 Step 8500",
     "thenlper__gte-base":                         "Thenlper GTE Base",
     "abhinand__MedEmbed-base-v0.1":               "Abhinand MedEmbed Base",
 }
@@ -131,10 +132,10 @@ retrieval_wiki_diseases_dataset
 # """.split('\n')
 def load_json_files():
     base_dirs = [
-        'data/classification/results',
-        'data/clustering/results',
-        'data/pair_classification/results',
-        'data/retrieval/results'
+        '../data/classification/results',
+        '../data/clustering/results',
+        '../data/pair_classification/results',
+        '../data/retrieval/results'
     ]
     json_data = []
 
@@ -232,8 +233,8 @@ df.to_csv("results.csv")
 for task_type in df.task_type.unique():
     print(f"Tasks in task_type {task_type}: {len(df[df.task_type==task_type].task_name.unique())}")
 for task_name in df.task_name.unique():
-    if df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl15-step_8000")]["metric"].item() < df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item():
-        print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-cl15-step_8000")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
+    if df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-mb-cl15-step_8500")]["metric"].item() < df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item():
+        print(f'{task_name}\nAverage:{df[df.task_name==task_name]["metric"].mean()}\nOurs:{df[(df.task_name==task_name) & (df.model_name=="skyfury__CTMEDGTE-mb-cl15-step_8500")]["metric"].item()}\nGTE:{df[(df.task_name==task_name) & (df.model_name=="thenlper__gte-base")]["metric"].item()}\n')
 # print(df.task_type.value_counts())
 # Group and calculate mean ± std
 grouped = df.groupby(["task_type", "model_name"])["metric"].agg(["mean", "std"]).reset_index()
@@ -276,6 +277,70 @@ print(latex_table)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+time_grouped = (
+    df.groupby(["task_type", "model_name"])["evaluation_time"]
+      .agg(["mean", "std"])
+      .reset_index()
+)
+time_grouped["mean ± std"] = (
+    time_grouped["mean"].round(2).astype(str)
+    + " ± "
+    + time_grouped["std"].round(2).astype(str)
+)
+
+# Pivot so each task‑type gets its own “_time” column
+pivot_time = (
+    time_grouped
+        .pivot(index="model_name", columns="task_type", values="mean ± std")
+        .rename(columns=lambda c: f"{c}_time")          # e.g. classification_time
+)
+
+# ------------------------------------------------------------
+# ❷  Average evaluation time across task *types* --------------
+# ------------------------------------------------------------
+time_type_avg = (
+    time_grouped.groupby("model_name")["mean"]
+    .mean()
+    .round(2)
+    .rename("AvgTimeAcrossTaskTypes")
+)
+
+# ------------------------------------------------------------
+# ❸  Build the final summary tables  --------------------------
+# ------------------------------------------------------------
+# (your existing pivot_table / metrics summary is called `final_table`)
+# Make sure the model‑name mapping is applied to both tables
+pivot_time.rename(index=name_mapping, inplace=True)
+
+final_table_with_time = (
+    final_table                       # metrics (means ± std, global avgs, EvalTime)
+        .join(pivot_time, how="left") # add per‑task‑type *_time columns
+        .join(time_type_avg, how="left")
+)
+
+# ------------------------------------------------------------
+# ❹  Persist both versions  ----------------------------------
+# ------------------------------------------------------------
+final_table_with_time.to_csv("final_model_summary_with_time.csv")
+
+
+
 def extract_source(task_name: str) -> str:
     tn = task_name.lower()
     if "mimic" in tn:
@@ -315,6 +380,12 @@ final_table.rename(index=name_mapping, inplace=True)
 final_table.to_csv("final_source_model_summary.csv")
 latex_table = final_table.to_latex(index=True)
 print(latex_table)
+
+
+
+
+
+
 
 
 

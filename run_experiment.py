@@ -55,10 +55,13 @@ model_names = [
     # "skyfury/CTMEDGTE-cl13-step_8500",
     # "skyfury/CTMEDGTE-cl14-step_4000",
     # "skyfury/CTMEDGTE-cl14-step_8000",
-    "skyfury/CTMEDGTE-cl15-step_8000",
+    # "skyfury/CTMEDGTE-cl15-step_8000",
     # "skyfury/CTMEDGTE-cl14-step_8500",
+    # "skyfury/CTMEDGTE-mb-cl15-step_2500",
+    # "skyfury/CTMEDGTE-mb-cl15-step_8500",
     # "hsila/run1-med-nomic",
     # "abhinand/MedEmbed-base-v0.1",
+    "skyfury/CTMEDGTE-mb-cl17-step_7500",
 
 ]
 
